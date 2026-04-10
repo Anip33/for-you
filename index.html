@@ -5,119 +5,161 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>For You 💖</title>
     <style>
+        :root {
+            --ios-pink: #ff3b30;
+            --ios-soft: #ff9500;
+        }
+
         body {
             margin: 0;
             height: 100vh;
-            background: radial-gradient(circle, #ffafbd, #ffc3a0);
-            font-family: -apple-system, system-ui, sans-serif;
+            background: #000; /* Background hitam agar warna pink menyala */
             display: flex;
             align-items: center;
             justify-content: center;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             overflow: hidden;
-            touch-action: none;
+        }
+
+        /* Latar Belakang Romantis Bergerak */
+        .bg-gradient {
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%);
+            z-index: 1;
         }
 
         #card {
-            background: rgba(255, 255, 255, 0.2);
-            -webkit-backdrop-filter: blur(25px);
-            backdrop-filter: blur(25px);
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.3);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
             padding: 40px 20px;
             border-radius: 40px;
             width: 80%;
             text-align: center;
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .emoji { font-size: 70px; margin-bottom: 20px; display: block; }
-        h1 { color: white; font-size: 22px; margin-bottom: 30px; text-shadow: 0 2px 10px rgba(0,0,0,0.2); }
+        @keyframes popIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .emoji { font-size: 80px; display: block; margin-bottom: 10px; }
+        h1 { color: #fff; font-size: 22px; margin-bottom: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Jarak antar tombol */
+        }
 
         .btn {
             width: 100%;
-            padding: 22px;
+            padding: 20px;
             border-radius: 20px;
             border: none;
-            font-size: 20px;
-            font-weight: 800;
-            margin-bottom: 20px; /* Jarak tombol */
-            transition: 0.3s;
+            font-size: 18px;
+            font-weight: 700;
+            transition: transform 0.2s;
             -webkit-tap-highlight-color: transparent;
         }
 
-        #yesBtn { background: #ff4d6d; color: white; box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4); }
-        #noBtn { background: white; color: #ff4d6d; position: relative; }
+        #yesBtn {
+            background: #ff2d55;
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 45, 85, 0.3);
+        }
 
-        #final {
+        #noBtn {
+            background: white;
+            color: #ff2d55;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        /* Halaman Sukses */
+        #success-screen {
             display: none;
             position: fixed;
             inset: 0;
-            background: #ff4d6d;
-            z-index: 9999;
+            background: #ff2d55;
+            z-index: 100;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
-            text-align: center;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.2); }
+            to { opacity: 1; transform: scale(1); }
         }
     </style>
 </head>
-<body onclick="initHaptic()"> <div id="card">
-        <span class="emoji">🥺✨</span>
+<body>
+
+    <div class="bg-gradient"></div>
+
+    <div id="card">
+        <span class="emoji">🥺🌷</span>
         <h1>Sayang, kamu mau kan <br> jadi pacar aku?</h1>
         
-        <button id="yesBtn" class="btn">MAU! 💖</button>
-        <button id="noBtn" class="btn">Gak Mau 😋</button>
+        <div class="btn-container">
+            <button id="yesBtn" class="btn" onclick="terima()">MAU! ✨</button>
+            <button id="noBtn" class="btn">Gak Mau 😋</button>
+        </div>
     </div>
 
-    <div id="final">
-        <span style="font-size: 100px;">🥰</span>
-        <h1>YAY! I LOVE YOU!</h1>
-        <p>Terima kasih sudah pilih aku ✨</p>
+    <div id="success-screen">
+        <span style="font-size: 100px;">🥰💖</span>
+        <h1 style="font-size: 30px;">YEAYYY!!! <br> I Love You!</h1>
+        <p>Hari ini adalah hari terindahku ✨</p>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
         const yesBtn = document.getElementById('yesBtn');
-        const final = document.getElementById('final');
+        const successScreen = document.getElementById('success-screen');
 
-        // FUNGSI KUNCI: Memicu izin haptik di iOS 26.1
-        let hapticReady = false;
-        function initHaptic() {
-            if (!hapticReady) {
-                if (navigator.vibrate) navigator.vibrate(10); // Tes getar kecil
-                hapticReady = true;
-            }
-        }
-
-        function lari(e) {
-            if (e) e.preventDefault();
+        // Fungsi Tombol Lari yang Lebih Agresif untuk iPhone
+        function kabur() {
+            const padding = 50;
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding) + (padding/2);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding) + (padding/2);
             
-            // Haptik khusus saat gagal/kabur
-            if (navigator.vibrate) navigator.vibrate([30, 50, 30]);
-
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 40) + 20;
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 40) + 20;
-
             noBtn.style.position = 'fixed';
-            noBtn.style.left = x + 'px';
-            noBtn.style.top = y + 'px';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
+            
+            // Efek getar visual (karena haptik fisik dilarang Safari)
+            noBtn.style.transform = "scale(0.9)";
+            setTimeout(() => { noBtn.style.transform = "scale(1)"; }, 100);
         }
 
-        // Pakai touchstart untuk respon kilat iPhone
-        noBtn.addEventListener('touchstart', lari);
-        noBtn.addEventListener('click', lari);
-
-        yesBtn.addEventListener('click', () => {
-            // Getar panjang tanda sukses
-            if (navigator.vibrate) navigator.vibrate([100, 50, 100, 50, 200]);
-            
-            document.getElementById('card').style.transition = "0.4s";
-            document.getElementById('card').style.transform = "scale(0) rotate(20deg)";
-            
-            setTimeout(() => {
-                final.style.display = 'flex';
-            }, 400);
+        // Deteksi sentuhan jari (Touch) lebih dulu dari klik
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Menghentikan klik asli
+            kabur();
         });
+
+        noBtn.addEventListener('click', kabur);
+
+        function terima() {
+            // Animasi transisi yang keren
+            document.getElementById('card').style.opacity = '0';
+            document.getElementById('card').style.transform = 'scale(2)';
+            document.getElementById('card').style.transition = '0.5s';
+
+            setTimeout(() => {
+                successScreen.style.display = 'flex';
+            }, 300);
+        }
     </script>
 </body>
 </html>
