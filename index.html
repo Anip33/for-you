@@ -31,7 +31,7 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: all 0.8s ease;
+    transition: all 1.2s ease;
 }
 
 .hidden {
@@ -128,20 +128,6 @@ h1 {
     75% { transform: translateX(-10px); }
     100% { transform: translateX(0); }
 }
-
-/* LOVE FULL SCREEN */
-.love-burst {
-    position: absolute;
-    font-size: 25px;
-    animation: burst 1s forwards;
-}
-
-@keyframes burst {
-    to {
-        transform: translateY(-200px) scale(1.5);
-        opacity: 0;
-    }
-}
 </style>
 </head>
 
@@ -219,29 +205,40 @@ function createHeart(e) {
     setTimeout(() => heart.remove(), 1000);
 }
 
-// MAU → FULL LAYAR LOVE 😍
+// MAU → 1000 LOVE NAIK + TRANSISI LAMA
 function acceptLove() {
-    const totalX = 10;
-    const totalY = 16;
+    const total = 1000;
+    let count = 0;
 
-    const spacingX = 390 / totalX;
-    const spacingY = 844 / totalY;
-
-    for (let x = 0; x < totalX; x++) {
-        for (let y = 0; y < totalY; y++) {
+    const interval = setInterval(() => {
+        for (let i = 0; i < 20; i++) {
+            if (count >= total) break;
 
             let love = document.createElement("div");
-            love.className = "love-burst";
             love.innerHTML = "😍";
 
-            love.style.left = (x * spacingX + 10) + "px";
-            love.style.top = (y * spacingY + 10) + "px";
+            love.style.position = "absolute";
+            love.style.fontSize = (20 + Math.random() * 15) + "px";
+            love.style.left = Math.random() * 390 + "px";
+            love.style.top = "844px";
+            love.style.transition = "transform 1.5s linear, opacity 1.5s";
 
             document.body.appendChild(love);
 
-            setTimeout(() => love.remove(), 1200);
+            setTimeout(() => {
+                love.style.transform = `translateY(-${900 + Math.random()*300}px)`;
+                love.style.opacity = 0;
+            }, 10);
+
+            setTimeout(() => love.remove(), 1600);
+
+            count++;
         }
-    }
+
+        if (count >= total) {
+            clearInterval(interval);
+        }
+    }, 40);
 
     const page2 = document.getElementById("page2");
 
@@ -249,7 +246,7 @@ function acceptLove() {
 
     setTimeout(() => {
         page2.classList.remove("hidden");
-    }, 800);
+    }, 1500); // lebih lama biar dramatis
 }
 </script>
 
