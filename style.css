@@ -1,0 +1,94 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  width: 390px;
+  height: 844px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 10px;
+  color: white;
+}
+
+p {
+  font-size: 18px;
+  margin-bottom: 30px;
+  color: white;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+button {
+  padding: 15px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#yesBtn {
+  background: #ff4d6d;
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 77, 109, 0.7);
+}
+
+#noBtn {
+  background: white;
+  color: #ff4d6d;
+}
+
+.hidden {
+  display: none;
+}
+
+/* efek love floating */
+body::before {
+  content: "💖 💕 💗 💓 💞";
+  position: absolute;
+  top: -50px;
+  left: 0;
+  width: 100%;
+  animation: fall 10s linear infinite;
+  font-size: 20px;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(900px); }
+}
+
+/* efek burst */
+.heart-burst {
+  font-size: 50px;
+  animation: explode 1s ease-out infinite;
+}
+
+@keyframes explode {
+  0% { transform: scale(0.5); opacity: 0; }
+  50% { transform: scale(1.5); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
