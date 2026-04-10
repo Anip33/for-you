@@ -3,228 +3,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>For My Universe 💖</title>
+    <title>For My Love 💖</title>
     <style>
         :root {
-            --primary: #ff4d6d;
-            --secondary: #ff85a1;
-            --glass: rgba(255, 255, 255, 0.25);
+            --pink-soft: #ffafbd;
+            --pink-deep: #ff4d6d;
         }
 
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(180deg, var(--pink-soft) 0%, #ffc3a0 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica;
             overflow: hidden;
-            font-family: -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto;
-            background: radial-gradient(circle at top, #ff9a9e, #fecfef);
-            display: flex; justify-content: center; align-items: center;
+            touch-action: manipulation;
         }
 
-        /* Efek Blur Background Canggih */
-        #bg-glow {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png');
-            opacity: 0.3; z-index: 1;
-        }
-
-        #container {
-            position: relative;
-            z-index: 10;
-            text-align: center;
+        #glass-card {
+            background: rgba(255, 255, 255, 0.4);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border-radius: 35px;
+            padding: 40px 20px;
             width: 85%;
-            padding: 30px 20px;
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 25px 45px rgba(0,0,0,0.1);
-            animation: fadeIn 1.5s ease-out;
+            max-width: 350px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            z-index: 10;
         }
 
-        .emoji-main {
-            font-size: 70px;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
-            display: inline-block;
-            animation: heartBeat 1.5s infinite;
+        .emoji-header { font-size: 80px; margin-bottom: 20px; display: block; }
+        
+        h1 { font-size: 24px; color: #fff; text-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 40px; }
+
+        .btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 20px; /* Jarak antara tombol sesuai permintaanmu */
+            align-items: center;
         }
 
-        h1 {
-            color: #fff;
-            font-size: 1.8rem;
-            font-weight: 800;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin: 20px 0 40px 0;
-        }
-
-        /* Tombol dengan gaya iOS Premium */
         .btn {
-            display: block;
             width: 100%;
-            padding: 18px;
-            font-size: 1.2rem;
-            font-weight: 700;
+            padding: 20px;
+            border-radius: 20px;
             border: none;
-            border-radius: 18px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 20px;
+            font-weight: bold;
+            transition: all 0.3s ease;
             -webkit-tap-highlight-color: transparent;
         }
 
         #yesBtn {
-            background: linear-gradient(45deg, #ff4d6d, #ff758c);
+            background: var(--pink-deep);
             color: white;
-            margin-bottom: 20px; /* Jarak antar tombol */
-            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
         }
 
         #noBtn {
-            background: rgba(255, 255, 255, 0.8);
-            color: #ff4d6d;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: white;
+            color: var(--pink-deep);
+            position: relative;
+            z-index: 5;
         }
 
-        /* Halaman Sukses */
-        #successPage {
+        #success {
             display: none;
             position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #ff4d6d;
+            inset: 0;
+            background: var(--pink-deep);
             z-index: 1000;
-            justify-content: center; align-items: center;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
             opacity: 0;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.6s ease;
         }
 
-        /* Animasi */
-        @keyframes heartBeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.1); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.1); }
-            70% { transform: scale(1); }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .confetti {
+        /* Animasi Hati Kecil */
+        .floating-heart {
             position: absolute;
-            width: 10px; height: 10px;
-            background: #fff;
-            animation: fall 3s linear forwards;
+            font-size: 20px;
+            pointer-events: none;
+            animation: fly 4s linear infinite;
+            z-index: 1;
         }
 
-        @keyframes fall {
-            to { transform: translateY(100vh) rotate(360deg); }
+        @keyframes fly {
+            from { transform: translateY(100vh) scale(0.5); opacity: 1; }
+            to { transform: translateY(-10vh) scale(1.5); opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div id="bg-glow"></div>
-    <div id="hearts-container"></div>
-
-    <div id="container">
-        <div class="emoji-main">🌸✨</div>
-        <h1>Maukah kamu jadi bagian dari masa depanku? 🥺❤️</h1>
+    <div id="glass-card">
+        <span class="emoji-header">🥺</span>
+        <h1>Sayang... <br>Mau gak jadi pacarku?</h1>
         
-        <button id="yesBtn" class="btn">Mau, Banget! 🥰</button>
-        <button id="noBtn" class="btn">Enggak 😋</button>
+        <div class="btn-wrapper">
+            <button id="yesBtn" class="btn">MAU! 🥰</button>
+            <button id="noBtn" class="btn">Gak Mau 😋</button>
+        </div>
     </div>
 
-    <div id="successPage">
-        <div style="font-size: 80px;">💖👑✨</div>
-        <h1 style="font-size: 2.2rem; text-align: center;">YAY! <br> I'm yours now!</h1>
-        <p style="color: white; font-weight: 300;">I promise to make you happy 🌸</p>
+    <div id="success">
+        <span style="font-size: 100px;">💖</span>
+        <h1 style="font-size: 32px;">I LOVE YOU!</h1>
+        <p>Kamu sudah buat hariku luar biasa ✨</p>
     </div>
 
     <script>
-        const yesBtn = document.getElementById('yesBtn');
         const noBtn = document.getElementById('noBtn');
-        const successPage = document.getElementById('successPage');
+        const yesBtn = document.getElementById('yesBtn');
+        const success = document.getElementById('success');
 
-        // Fungsi Haptik (Getaran)
-        function triggerHaptic(type) {
-            if ("vibrate" in navigator) {
-                if (type === 'light') navigator.vibrate(10);
-                if (type === 'medium') navigator.vibrate(50);
-                if (type === 'error') navigator.vibrate([50, 30, 50]);
+        // Fungsi Haptik iOS
+        function viber(ms) {
+            if (navigator.vibrate) {
+                navigator.vibrate(ms);
             }
         }
 
-        // Efek Tombol Tidak Mau (Menghilang & Muncul Acak)
-        function moveNoButton() {
-            triggerHaptic('light'); // Getar tipis saat tombol kabur
+        function pindahkanTombol() {
+            viber(15); // Getar ringan saat tombol lari
             
-            const padding = 50;
-            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-            
-            // Posisi acak namun tetap di area layar
-            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
-            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
-            
-            noBtn.style.position = "fixed";
-            noBtn.style.zIndex = "999";
-            noBtn.style.left = `${randomX}px`;
-            noBtn.style.top = `${randomY}px`;
-            
-            // Efek pop-up canggih
-            noBtn.style.transform = "scale(0.8)";
-            setTimeout(() => {
-                noBtn.style.transform = "scale(1)";
-            }, 100);
+            // Area aman iPhone 13 (menghindari takik/notch dan home bar)
+            const padding = 60;
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding) + (padding/2);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding) + (padding/2);
+
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${x}px`;
+            noBtn.style.top = `${y}px`;
         }
 
+        // Event listener khusus layar sentuh iOS
         noBtn.addEventListener('touchstart', (e) => {
             e.preventDefault();
-            moveNoButton();
+            pindahkanTombol();
         });
 
-        noBtn.addEventListener('click', moveNoButton);
+        noBtn.addEventListener('mouseover', pindahkanTombol);
 
-        // Efek Transisi Saat Mau
         yesBtn.addEventListener('click', () => {
-            triggerHaptic('medium'); // Getar mantap saat diterima
+            viber([100, 50, 100]); // Getar pola untuk 'Yes'
             
-            // Animasi transisi zoom
-            document.getElementById('container').style.transition = "all 0.5s ease";
-            document.getElementById('container').style.transform = "scale(5)";
-            document.getElementById('container').style.opacity = "0";
+            // Animasi transisi canggih
+            document.getElementById('glass-card').style.transform = "scale(0.1)";
+            document.getElementById('glass-card').style.opacity = "0";
+            document.getElementById('glass-card').style.transition = "all 0.5s ease";
 
             setTimeout(() => {
-                successPage.style.display = 'flex';
-                setTimeout(() => {
-                    successPage.style.opacity = '1';
-                    createConfetti();
-                }, 50);
-            }, 400);
+                success.style.display = 'flex';
+                setTimeout(() => { success.style.opacity = '1'; }, 50);
+            }, 500);
         });
 
-        // Fitur Canggih: Partikel Confetti
-        function createConfetti() {
-            for(let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.classList.add('confetti');
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                confetti.style.animationDuration = (Math.random() * 2 + 1) + 's';
-                confetti.style.opacity = Math.random();
-                document.body.appendChild(confetti);
-            }
-        }
-
-        // Efek Parallax halus saat HP digerakkan (Canggih!)
-        window.addEventListener('deviceorientation', (event) => {
-            const x = event.beta / 4; 
-            const y = event.gamma / 4;
-            document.getElementById('container').style.transform = `rotateX(${x}deg) rotateY(${y}deg)`;
-        });
+        // Hujan hati di background
+        setInterval(() => {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.className = 'floating-heart';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 5000);
+        }, 400);
     </script>
 </body>
 </html>
