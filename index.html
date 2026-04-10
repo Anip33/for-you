@@ -17,31 +17,31 @@ body {
   width: 390px;
   height: 844px;
   overflow: hidden;
-  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  animation: gradientMove 6s infinite alternate;
+  background: linear-gradient(45deg, #ff9a9e, #fad0c4, #ffdde1);
+}
+
+/* animasi background */
+@keyframes gradientMove {
+  0% { filter: hue-rotate(0deg); }
+  100% { filter: hue-rotate(40deg); }
 }
 
 .container {
   width: 100%;
   height: 100%;
+  position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  color: white;
   text-align: center;
   padding: 20px;
 }
 
-h1 {
-  font-size: 28px;
-  color: white;
-  margin-bottom: 10px;
-}
-
-p {
-  font-size: 18px;
-  color: white;
-  margin-bottom: 30px;
-}
+h1 { font-size: 28px; }
+p { margin: 20px 0; font-size: 18px; }
 
 .buttons {
   display: flex;
@@ -51,53 +51,40 @@ p {
 
 button {
   padding: 15px 30px;
-  font-size: 18px;
   border: none;
   border-radius: 30px;
+  font-size: 18px;
   cursor: pointer;
   transition: 0.3s;
 }
 
+/* tombol mau */
 #yesBtn {
   background: #ff4d6d;
   color: white;
-  box-shadow: 0 0 20px rgba(255, 77, 109, 0.7);
+  box-shadow: 0 0 20px pink;
 }
 
+/* tombol tidak */
 #noBtn {
   background: white;
   color: #ff4d6d;
   position: relative;
 }
 
-.hidden {
-  display: none;
-}
+/* efek halaman */
+.hidden { display: none; }
 
-/* love jatuh */
-.hearts {
+/* hearts particle */
+.heart {
   position: absolute;
-  top: -50px;
-  width: 100%;
   font-size: 20px;
-  animation: fall 10s linear infinite;
+  animation: floatUp 3s linear forwards;
 }
 
-@keyframes fall {
-  0% { transform: translateY(-50px); }
-  100% { transform: translateY(900px); }
-}
-
-/* page 2 efek */
-.burst {
-  font-size: 50px;
-  animation: pop 1s infinite;
-}
-
-@keyframes pop {
-  0% { transform: scale(0.5); opacity: 0; }
-  50% { transform: scale(1.5); opacity: 1; }
-  100% { transform: scale(2); opacity: 0; }
+@keyframes floatUp {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-200px); opacity: 0; }
 }
 
 /* transisi */
@@ -105,12 +92,12 @@ button {
   animation: fadeOut 0.5s forwards;
 }
 
-@keyframes fadeOut {
-  to { opacity: 0; transform: scale(0.9); }
-}
-
 .fade-in {
   animation: fadeIn 0.5s forwards;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; transform: scale(0.9); }
 }
 
 @keyframes fadeIn {
@@ -121,8 +108,6 @@ button {
 </head>
 
 <body>
-
-<div class="hearts">💖 💕 💗 💓 💞 💘 💝</div>
 
 <div class="container" id="page1">
   <h1>Hai Kamu 💕</h1>
@@ -135,38 +120,67 @@ button {
 </div>
 
 <div class="container hidden" id="page2">
-  <h1>YAYYYY 😍💖</h1>
-  <p>Aku bahagia banget kamu nerima aku 🥺💕</p>
-  <div class="burst">💖💖💖</div>
+  <h1>AKU SENANG BANGET 😍💖</h1>
+  <p>Kamu sekarang jadi pacarku 💕</p>
 </div>
+
+<!-- audio romantis -->
+<audio id="bgMusic" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
 const page1 = document.getElementById("page1");
 const page2 = document.getElementById("page2");
+const music = document.getElementById("bgMusic");
 
-// ukuran layar iPhone 13
-const maxX = 330;
-const maxY = 700;
+// getaran
+function vibrate() {
+  if (navigator.vibrate) navigator.vibrate(50);
+}
 
-// tombol tidak mau kabur tapi tetap di layar
-noBtn.addEventListener("mouseover", moveButton);
-noBtn.addEventListener("touchstart", moveButton);
+// efek hati
+function createHeart(x, y) {
+  const heart = document.createElement("div");
+  heart.className = "heart";
+  heart.innerText = "💖";
+  heart.style.left = x + "px";
+  heart.style.top = y + "px";
+  document.body.appendChild(heart);
 
+  setTimeout(() => heart.remove(), 3000);
+}
+
+// tombol tidak mau kabur
 function moveButton() {
-  const x = Math.random() * maxX;
-  const y = Math.random() * maxY;
+  const x = Math.random() * 330;
+  const y = Math.random() * 700;
 
   noBtn.style.position = "absolute";
   noBtn.style.left = x + "px";
   noBtn.style.top = y + "px";
+
+  vibrate();
 }
 
-// tombol mau ditekan
-yesBtn.addEventListener("click", () => {
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("touchstart", moveButton);
+
+// tombol mau
+yesBtn.addEventListener("click", (e) => {
+  vibrate();
+
+  // play musik (harus dari interaksi user)
+  music.play();
+
+  // efek scale
   yesBtn.style.transform = "scale(1.3)";
   yesBtn.style.boxShadow = "0 0 40px pink";
+
+  // efek hati banyak
+  for (let i = 0; i < 20; i++) {
+    createHeart(Math.random() * 390, Math.random() * 844);
+  }
 
   page1.classList.add("fade-out");
 
