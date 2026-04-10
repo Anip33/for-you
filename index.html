@@ -2,188 +2,235 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <title>For You 💖</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Love ❤️</title>
     <style>
         :root {
-            --pink-bg: #ff9a9e;
-            --pink-btn: #ff4d6d;
+            --primary-pink: #ff4d6d;
+            --soft-pink: #ff85a1;
+            --glass: rgba(255, 255, 255, 0.2);
         }
 
-        /* Full Screen Setup untuk iPhone 13 */
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body, html {
-            margin: 0; padding: 0;
-            width: 100%; height: 100%;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             overflow: hidden;
-            background: linear-gradient(180deg, var(--pink-bg) 0%, #fad0c4 100%);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
-            display: flex; justify-content: center; align-items: center;
-        }
-
-        /* Kontainer Utama */
-        #main-container {
-            position: relative;
-            z-index: 10;
-            width: 85%;
-            max-width: 350px;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 40px;
-            padding: 40px 20px;
+            color: white;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .emoji { font-size: 80px; margin-bottom: 10px; display: block; }
-        
-        h1 {
-            color: #fff;
-            font-size: 24px;
-            margin-bottom: 40px;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            line-height: 1.3;
+        /* Latar belakang partikel hati */
+        #particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
         }
 
-        /* Tombol & Jarak */
-        .btn-group {
+        .container {
+            width: 90%;
+            max-width: 390px; /* Lebar iPhone 13 */
+            height: 80vh;
+            padding: 20px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Jarak antara Mau dan Gak Mau */
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            position: relative;
+            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .btn {
-            width: 100%;
-            padding: 20px;
-            border: none;
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .gif-container img {
+            width: 150px;
             border-radius: 20px;
-            font-size: 20px;
-            font-weight: 800;
-            transition: 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
+            margin-bottom: 30px;
         }
 
-        #yesBtn {
-            background: var(--pink-btn);
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            width: 100%;
+            align-items: center;
+            position: relative;
+            height: 150px;
+        }
+
+        button {
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            width: 80%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        #yes-btn {
+            background-color: var(--primary-pink);
             color: white;
-            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
-            z-index: 100;
+            z-index: 10;
         }
 
-        #noBtn {
-            background: white;
-            color: var(--pink-btn);
-            z-index: 99;
+        #no-btn {
+            background-color: white;
+            color: var(--primary-pink);
+            position: absolute;
+            top: 75px; /* Jarak di bawah tombol Mau */
+            transition: all 0.3s ease;
         }
 
         /* Halaman Sukses */
-        #success-page {
+        .success-content {
             display: none;
-            position: fixed;
-            inset: 0;
-            background: var(--pink-btn);
-            z-index: 9999;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            text-align: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.5s ease;
         }
 
-        .shake { animation: shake-card 0.3s; }
-        @keyframes shake-card {
-            0% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            50% { transform: translateX(5px); }
-            100% { transform: translateX(0); }
+        .show-success .main-content { display: none; }
+        .show-success .success-content { 
+            display: block; 
+            opacity: 1; 
+            transform: scale(1);
+        }
+
+        /* Efek Transisi Keren */
+        .flash-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes pink-flash {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div id="main-container">
-        <span class="emoji">🥺🌷</span>
-        <h1>Hallo Sayaaangggg.....<br>Mau gak jadi pacar aku?</h1>
-        
-        <div class="btn-group">
-            <button id="yesBtn" onclick="diterima()">MAAUUU!!! 🥰</button>
+    <div id="particles"></div>
+    <div class="flash-effect" id="flash"></div>
+
+    <div class="container" id="main-card">
+        <div class="main-content">
+            <div class="gif-container">
+                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueGZ3bmZqZzR3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/cmCHuk53AiFY2ZxlYm/giphy.gif" alt="Cute Cat">
+            </div>
+            <h1>Halo Sayang... ✨<br>Mau gak jadi pacar aku? 🥺🌷</h1>
             
-            <button id="noBtn">GAAAKKK MAUUU!!!😋</button>
+            <div class="buttons" id="btn-wrapper">
+                <button id="yes-btn" onclick="celebrate()">MAAAUUU!!! 💖</button>
+                <button id="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">GAAAKKK MAUUUU!!! 🏃‍♂️</button>
+            </div>
+        </div>
+
+        <div class="success-content">
+            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2Z4eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/K97pG8vC3qE/giphy.gif" width="150" style="margin-bottom: 20px;">
+            <h1>ASIIIQQQQ I LOVE U SAYAAANNGGG! 🌸💕✨</h1>
+            <p style="font-size: 1.1rem;">JADI MAU CIUUUMM IIIHHHH!!!!!!!!</p>
         </div>
     </div>
 
-    <div id="success-page">
-        <span style="font-size: 100px;">💖👑</span>
-        <h1 style="font-size: 32px;">ASIIIQQQQ I LOVE U SAYAAANNGGG!!!!</h1>
-        <p style="font-size: 18px;">MAUUUU CIIIUUUMMMM IIIIHHHHH!!!!!!!</p>
-    </div>
-
     <script>
-        const noBtn = document.getElementById('noBtn');
-        const card = document.getElementById('main-container');
-        const successPage = document.getElementById('success-page');
-
-        function lari(e) {
-            if (e) e.preventDefault();
+        // Animasi Hati Berjatuhan
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '-20px';
+            heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+            heart.style.zIndex = '1';
+            heart.style.opacity = Math.random();
+            heart.style.transition = 'transform 3s linear, top 3s linear';
             
-            // Efek getar visual pada card saat tombol kabur
-            card.classList.add('shake');
-            setTimeout(() => card.classList.remove('shake'), 300);
+            document.getElementById('particles').appendChild(heart);
 
-            // MENGHITUNG AREA AMAN (Safe Area) iPhone 13
-            // Margin agar tidak tertutup notch atau menempel ke pinggir layar
-            const margin = 50; 
-            const screenWidth = window.innerWidth;
-            const screenHeight = window.innerHeight;
+            setTimeout(() => {
+                heart.style.top = '110vh';
+                heart.style.transform = `translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg)`;
+            }, 100);
 
-            const buttonWidth = noBtn.offsetWidth;
-            const buttonHeight = noBtn.offsetHeight;
+            setTimeout(() => heart.remove(), 3000);
+        }
+        setInterval(createHeart, 300);
 
-            // Logika agar tetap di dalam layar
-            const newX = Math.random() * (screenWidth - buttonWidth - (margin * 2)) + margin;
-            const newY = Math.random() * (screenHeight - buttonHeight - (margin * 2)) + margin;
+        // Logika Tombol "Gak Mau" yang Berpindah secara Pintar
+        const noBtn = document.getElementById('no-btn');
+        const container = document.getElementById('main-card');
 
-            noBtn.style.position = 'fixed';
-            noBtn.style.left = `${newX}px`;
-            noBtn.style.top = `${newY}px`;
+        function moveNoButton() {
+            const padding = 20;
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+
+            // Menghitung batas maksimal perpindahan di dalam container iPhone 13
+            const maxX = containerRect.width - btnRect.width - padding;
+            const maxY = containerRect.height - btnRect.height - padding;
+
+            // Posisi acak baru
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+
+            // Terapkan posisi baru
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
         }
 
-        // Event listener khusus touch (lebih responsif di iOS)
-        noBtn.addEventListener('touchstart', lari);
-        noBtn.addEventListener('click', lari);
-
-        function diterima() {
-            // Animasi transisi Full Screen
-            card.style.transform = "scale(5)";
-            card.style.opacity = "0";
+        // Fungsi Transisi Keren saat Klik Mau
+        function celebrate() {
+            const flash = document.getElementById('flash');
+            const card = document.getElementById('main-card');
+            
+            // Efek Flash Cahaya
+            flash.style.animation = 'pink-flash 0.6s ease-out';
             
             setTimeout(() => {
-                successPage.style.display = 'flex';
-                // Trigger confetti sederhana via emoji
-                spawnHearts();
+                card.classList.add('show-success');
+                // Tambahkan lebih banyak hati
+                for(let i=0; i<50; i++) {
+                    setTimeout(createHeart, i * 50);
+                }
             }, 300);
-        }
-
-        function spawnHearts() {
-            for(let i=0; i<15; i++) {
-                const h = document.createElement('div');
-                h.innerHTML = '❤️';
-                h.style.position = 'fixed';
-                h.style.left = Math.random() * 100 + 'vw';
-                h.style.top = '100vh';
-                h.style.fontSize = '24px';
-                h.style.transition = '3s';
-                document.body.appendChild(h);
-                setTimeout(() => {
-                    h.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
-                    h.style.opacity = '0';
-                }, 100);
-            }
         }
     </script>
 </body>
