@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=390, height=844, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>For You 💖</title>
 
 <style>
@@ -14,175 +14,173 @@
 }
 
 body {
-    height: 100vh;
+    width: 390px;
+    height: 844px;
     overflow: hidden;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-}
-
-/* PAGE */
-.page {
-    width: 100%;
-    height: 100%;
-    position: relative;
-}
-
-/* CENTER */
-.center {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-}
-
-/* TEXT */
-h1 {
-    color: white;
-    font-size: 26px;
-    margin-bottom: 40px;
-}
-
-/* BUTTON */
-.btn {
-    width: 240px;
-    padding: 16px;
-    border-radius: 40px;
-    border: none;
-    font-size: 18px;
-    transition: 0.3s ease;
-}
-
-/* YES */
-#yesBtn {
-    background: white;
-    color: #ff4d6d;
-    margin-bottom: 15px;
-}
-
-/* NO */
-#noBtn {
-    background: #ff4d6d;
-    color: white;
-    position: absolute;
-    transition: transform 0.25s ease;
-}
-
-/* PAGE 2 */
-#page2 {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    transform: scale(1.2);
-    transition: 0.6s;
+    background: linear-gradient(135deg, #ff9ecf, #ffc1e3);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.show {
-    opacity: 1 !important;
-    transform: scale(1) !important;
+/* HALAMAN */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.8s ease;
 }
 
-/* HEART */
+/* TRANSISI */
+.hidden {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+}
+
+/* TEKS */
+h1 {
+    font-size: 28px;
+    color: white;
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+/* BUTTON */
+.btn {
+    padding: 15px 25px;
+    border-radius: 30px;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin: 10px;
+}
+
+/* Tombol Mau */
+.yes {
+    background: #ff4fa3;
+    color: white;
+    box-shadow: 0 0 20px rgba(255, 79, 163, 0.6);
+}
+
+/* Tombol Tidak Mau */
+.no {
+    background: white;
+    color: #ff4fa3;
+    position: absolute;
+}
+
+/* HEART TRAIL */
 .heart {
     position: absolute;
     font-size: 20px;
-    animation: floatUp 3s linear forwards;
+    animation: float 1s ease-out forwards;
 }
 
-@keyframes floatUp {
+@keyframes float {
     to {
-        transform: translateY(-300px) scale(2);
+        transform: translateY(-50px);
         opacity: 0;
     }
+}
+
+/* HALAMAN 2 */
+.success {
+    background: linear-gradient(135deg, #ff4fa3, #ff85c1);
+    color: white;
+    text-align: center;
+}
+
+.big-heart {
+    font-size: 60px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+    100% { transform: scale(1); }
 }
 </style>
 </head>
 
 <body>
 
-<audio id="music" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3"></audio>
+<!-- HALAMAN 1 -->
+<div id="page1" class="page">
+    <h1>💖 Kamu mau jadi pacarku? 💖</h1>
 
-<div class="page" id="page1">
-    <div class="center">
-        <h1>💖 Kamu mau jadi pacarku nggak? 🥺</h1>
-
-        <button id="yesBtn" class="btn">Mau 💕</button>
-        <button id="noBtn" class="btn">Tidak 😢</button>
-    </div>
+    <button class="btn yes" onclick="acceptLove()">😍 Mau</button>
+    <button class="btn no" id="noBtn">😢 Tidak Mau</button>
 </div>
 
-<div id="page2">
-    <h1>💖 YAAAY!!! 💖<br>Aku seneng banget 😭💕</h1>
+<!-- HALAMAN 2 -->
+<div id="page2" class="page hidden success">
+    <div class="big-heart">💖</div>
+    <h1>YEAAY!! 🥰💖<br>Aku seneng banget kamu mau! 💕</h1>
 </div>
 
 <script>
+// BATAS LAYAR IPHONE 13
+const maxX = 390 - 120;
+const maxY = 844 - 60;
+
 const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const page2 = document.getElementById("page2");
-const music = document.getElementById("music");
 
-let dodgeLevel = 0;
+// POSISI AWAL
+let posX = 200;
+let posY = 500;
 
-/* POSISI AWAL */
-function setInitialPosition() {
-    const yesRect = yesBtn.getBoundingClientRect();
-    noBtn.style.left = yesRect.left + "px";
-    noBtn.style.top = (yesRect.bottom + 15) + "px";
+noBtn.style.left = posX + "px";
+noBtn.style.top = posY + "px";
+
+// TOMBOL KABUR (TAPI TETAP DALAM LAYAR)
+noBtn.addEventListener("touchstart", moveButton);
+noBtn.addEventListener("mouseover", moveButton);
+
+function moveButton() {
+    let randomX = Math.random() * maxX;
+    let randomY = Math.random() * maxY;
+
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
 }
 
-/* GERAK HALUS (bukan teleport) */
-function dodge() {
-    dodgeLevel++;
+// EFEK LOVE TRAIL
+document.addEventListener("touchmove", createHeart);
+document.addEventListener("mousemove", createHeart);
 
-    const moveX = (Math.random() - 0.5) * 150 * dodgeLevel;
-    const moveY = (Math.random() - 0.5) * 150 * dodgeLevel;
+function createHeart(e) {
+    let heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "💖";
 
-    let currentX = noBtn.offsetLeft;
-    let currentY = noBtn.offsetTop;
+    heart.style.left = (e.touches ? e.touches[0].clientX : e.clientX) + "px";
+    heart.style.top = (e.touches ? e.touches[0].clientY : e.clientY) + "px";
 
-    let newX = currentX + moveX;
-    let newY = currentY + moveY;
+    document.body.appendChild(heart);
 
-    // batas layar
-    newX = Math.max(0, Math.min(window.innerWidth - noBtn.offsetWidth, newX));
-    newY = Math.max(0, Math.min(window.innerHeight - noBtn.offsetHeight, newY));
-
-    noBtn.style.left = newX + "px";
-    noBtn.style.top = newY + "px";
+    setTimeout(() => {
+        heart.remove();
+    }, 1000);
 }
 
-/* EVENT */
-noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    dodge();
-});
+// TRANSISI KE HALAMAN 2
+function acceptLove() {
+    const page1 = document.getElementById("page1");
+    const page2 = document.getElementById("page2");
 
-noBtn.addEventListener("mouseover", dodge);
+    page1.classList.add("hidden");
 
-/* YES */
-yesBtn.addEventListener("click", () => {
-    if (navigator.vibrate) navigator.vibrate(50);
-    music.play();
-
-    for (let i = 0; i < 25; i++) {
-        let heart = document.createElement("div");
-        heart.className = "heart";
-        heart.innerHTML = "💖";
-        heart.style.left = Math.random() * window.innerWidth + "px";
-        heart.style.bottom = "0px";
-
-        document.body.appendChild(heart);
-        setTimeout(() => heart.remove(), 3000);
-    }
-
-    page2.classList.add("show");
-});
-
-/* INIT */
-window.onload = setInitialPosition;
-window.onresize = setInitialPosition;
+    setTimeout(() => {
+        page2.classList.remove("hidden");
+    }, 500);
+}
 </script>
 
 </body>
