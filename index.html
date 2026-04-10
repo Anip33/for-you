@@ -181,7 +181,17 @@ function moveButton() {
     page1.classList.add("shake");
     setTimeout(() => page1.classList.remove("shake"), 400);
 
-    let yesRect = yesBtn.getBoundingClientRect();
+    const yesRect = yesBtn.getBoundingClientRect();
+
+    // 🔥 AREA TERLARANG (diperbesar biar aman)
+    const padding = 40;
+
+    const forbidden = {
+        left: yesRect.left - padding,
+        right: yesRect.right + padding,
+        top: yesRect.top - padding,
+        bottom: yesRect.bottom + padding
+    };
 
     let x, y, safe;
 
@@ -189,12 +199,12 @@ function moveButton() {
         x = Math.random() * maxX;
         y = Math.random() * maxY;
 
-        // cek apakah tabrakan dengan tombol mau
+        // cek apakah masuk area terlarang
         safe = !(
-            x < yesRect.right &&
-            x + 120 > yesRect.left &&
-            y < yesRect.bottom &&
-            y + 50 > yesRect.top
+            x < forbidden.right &&
+            x + 120 > forbidden.left &&
+            y < forbidden.bottom &&
+            y + 50 > forbidden.top
         );
 
     } while (!safe);
@@ -202,7 +212,6 @@ function moveButton() {
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
-
 // HEART TRAIL
 document.addEventListener("mousemove", createHeart);
 document.addEventListener("touchmove", createHeart);
