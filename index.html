@@ -3,162 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>For You 💖</title>
     <style>
         :root {
-            --ios-pink: #ff3b30;
-            --ios-soft: #ff9500;
+            --pink-bg: #ff9a9e;
+            --pink-btn: #ff4d6d;
         }
 
-        body {
-            margin: 0;
-            height: 100vh;
-            background: #000; /* Background hitam agar warna pink menyala */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+        /* Full Screen Setup untuk iPhone 13 */
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        
+        body, html {
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             overflow: hidden;
+            background: linear-gradient(180deg, var(--pink-bg) 0%, #fad0c4 100%);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* Latar Belakang Romantis Bergerak */
-        .bg-gradient {
-            position: fixed;
-            inset: 0;
-            background: linear-gradient(45deg, #ff9a9e 0%, #fad0c4 99%);
-            z-index: 1;
-        }
-
-        #card {
+        /* Kontainer Utama */
+        #main-container {
             position: relative;
             z-index: 10;
+            width: 85%;
+            max-width: 350px;
             background: rgba(255, 255, 255, 0.3);
-            -webkit-backdrop-filter: blur(20px);
             backdrop-filter: blur(20px);
-            padding: 40px 20px;
+            -webkit-backdrop-filter: blur(20px);
             border-radius: 40px;
-            width: 80%;
+            padding: 40px 20px;
             text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
-            animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        @keyframes popIn {
-            0% { transform: scale(0.5); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
+        .emoji { font-size: 80px; margin-bottom: 10px; display: block; }
+        
+        h1 {
+            color: #fff;
+            font-size: 24px;
+            margin-bottom: 40px;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            line-height: 1.3;
         }
 
-        .emoji { font-size: 80px; display: block; margin-bottom: 10px; }
-        h1 { color: #fff; font-size: 22px; margin-bottom: 40px; text-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-
-        .btn-container {
+        /* Tombol & Jarak */
+        .btn-group {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Jarak antar tombol */
+            gap: 20px; /* Jarak antara Mau dan Gak Mau */
         }
 
         .btn {
             width: 100%;
             padding: 20px;
-            border-radius: 20px;
             border: none;
-            font-size: 18px;
-            font-weight: 700;
-            transition: transform 0.2s;
-            -webkit-tap-highlight-color: transparent;
+            border-radius: 20px;
+            font-size: 20px;
+            font-weight: 800;
+            transition: 0.2s cubic-bezier(0.1, 0.7, 1.0, 0.1);
         }
 
         #yesBtn {
-            background: #ff2d55;
+            background: var(--pink-btn);
             color: white;
-            box-shadow: 0 10px 20px rgba(255, 45, 85, 0.3);
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+            z-index: 100;
         }
 
         #noBtn {
             background: white;
-            color: #ff2d55;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-            position: relative;
+            color: var(--pink-btn);
+            z-index: 99;
         }
 
         /* Halaman Sukses */
-        #success-screen {
+        #success-page {
             display: none;
             position: fixed;
             inset: 0;
-            background: #ff2d55;
-            z-index: 100;
+            background: var(--pink-btn);
+            z-index: 9999;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: white;
-            animation: fadeIn 0.5s forwards;
+            text-align: center;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(1.2); }
-            to { opacity: 1; transform: scale(1); }
+        .shake { animation: shake-card 0.3s; }
+        @keyframes shake-card {
+            0% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            100% { transform: translateX(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-gradient"></div>
-
-    <div id="card">
+    <div id="main-container">
         <span class="emoji">🥺🌷</span>
-        <h1>Sayang, kamu mau kan <br> jadi pacar aku?</h1>
+        <h1>Hallo Sayaaangggg.....<br>Mau gak jadi pacar aku?</h1>
         
-        <div class="btn-container">
-            <button id="yesBtn" class="btn" onclick="terima()">MAU! ✨</button>
-            <button id="noBtn" class="btn">Gak Mau 😋</button>
+        <div class="btn-group">
+            <button id="yesBtn" onclick="diterima()">MAAUUU!!! 🥰</button>
+            
+            <button id="noBtn">GAAAKKK MAUUU!!!😋</button>
         </div>
     </div>
 
-    <div id="success-screen">
-        <span style="font-size: 100px;">🥰💖</span>
-        <h1 style="font-size: 30px;">YEAYYY!!! <br> I Love You!</h1>
-        <p>Hari ini adalah hari terindahku ✨</p>
+    <div id="success-page">
+        <span style="font-size: 100px;">💖👑</span>
+        <h1 style="font-size: 32px;">ASIIIQQQQ I LOVE U SAYAAANNGGG!!!!</h1>
+        <p style="font-size: 18px;">MAUUUU CIIIUUUMMMM IIIIHHHHH!!!!!!!</p>
     </div>
 
     <script>
         const noBtn = document.getElementById('noBtn');
-        const yesBtn = document.getElementById('yesBtn');
-        const successScreen = document.getElementById('success-screen');
+        const card = document.getElementById('main-container');
+        const successPage = document.getElementById('success-page');
 
-        // Fungsi Tombol Lari yang Lebih Agresif untuk iPhone
-        function kabur() {
-            const padding = 50;
-            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding) + (padding/2);
-            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding) + (padding/2);
+        function lari(e) {
+            if (e) e.preventDefault();
             
+            // Efek getar visual pada card saat tombol kabur
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 300);
+
+            // MENGHITUNG AREA AMAN (Safe Area) iPhone 13
+            // Margin agar tidak tertutup notch atau menempel ke pinggir layar
+            const margin = 50; 
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+
+            const buttonWidth = noBtn.offsetWidth;
+            const buttonHeight = noBtn.offsetHeight;
+
+            // Logika agar tetap di dalam layar
+            const newX = Math.random() * (screenWidth - buttonWidth - (margin * 2)) + margin;
+            const newY = Math.random() * (screenHeight - buttonHeight - (margin * 2)) + margin;
+
             noBtn.style.position = 'fixed';
-            noBtn.style.left = `${x}px`;
-            noBtn.style.top = `${y}px`;
-            
-            // Efek getar visual (karena haptik fisik dilarang Safari)
-            noBtn.style.transform = "scale(0.9)";
-            setTimeout(() => { noBtn.style.transform = "scale(1)"; }, 100);
+            noBtn.style.left = `${newX}px`;
+            noBtn.style.top = `${newY}px`;
         }
 
-        // Deteksi sentuhan jari (Touch) lebih dulu dari klik
-        noBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Menghentikan klik asli
-            kabur();
-        });
+        // Event listener khusus touch (lebih responsif di iOS)
+        noBtn.addEventListener('touchstart', lari);
+        noBtn.addEventListener('click', lari);
 
-        noBtn.addEventListener('click', kabur);
-
-        function terima() {
-            // Animasi transisi yang keren
-            document.getElementById('card').style.opacity = '0';
-            document.getElementById('card').style.transform = 'scale(2)';
-            document.getElementById('card').style.transition = '0.5s';
-
+        function diterima() {
+            // Animasi transisi Full Screen
+            card.style.transform = "scale(5)";
+            card.style.opacity = "0";
+            
             setTimeout(() => {
-                successScreen.style.display = 'flex';
+                successPage.style.display = 'flex';
+                // Trigger confetti sederhana via emoji
+                spawnHearts();
             }, 300);
+        }
+
+        function spawnHearts() {
+            for(let i=0; i<15; i++) {
+                const h = document.createElement('div');
+                h.innerHTML = '❤️';
+                h.style.position = 'fixed';
+                h.style.left = Math.random() * 100 + 'vw';
+                h.style.top = '100vh';
+                h.style.fontSize = '24px';
+                h.style.transition = '3s';
+                document.body.appendChild(h);
+                setTimeout(() => {
+                    h.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                    h.style.opacity = '0';
+                }, 100);
+            }
         }
     </script>
 </body>
