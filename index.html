@@ -3,234 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>For My Love ❤️</title>
+    <title>For You❤️</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-pink: #ff4d6d;
-            --soft-pink: #ff85a1;
-            --glass: rgba(255, 255, 255, 0.2);
+            --soft-pink: #ffb3c1;
+            --deep-love: #c9184a;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
+            width: 100vw;
             height: 100vh;
+            overflow: hidden;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffafbd 0%, #ffc3a0 100%);
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
-            color: white;
-            text-align: center;
+            position: relative;
         }
 
-        /* Latar belakang partikel hati */
-        #particles {
-            position: fixed;
+        /* Background Animasi Kelopak Bunga */
+        .bg-hearts {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: 1;
+            z-index: 0;
             pointer-events: none;
         }
 
-        .container {
+        /* Container Utama Pas untuk iPhone 13 */
+        .card {
             width: 90%;
-            max-width: 390px; /* Lebar iPhone 13 */
-            height: 80vh;
-            padding: 20px;
-            background: var(--glass);
+            max-width: 350px;
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
             border-radius: 30px;
+            padding: 40px 20px;
+            text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 2;
-            position: relative;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            z-index: 10;
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         h1 {
-            font-size: 2rem;
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.2rem;
+            color: var(--deep-love);
             margin-bottom: 20px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
-        .gif-container img {
-            width: 150px;
-            border-radius: 20px;
-            margin-bottom: 30px;
+        .emoji-main {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            display: block;
+            animation: pulse 1.5s infinite;
         }
 
-        .buttons {
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 20px;
-            width: 100%;
             align-items: center;
-            position: relative;
-            height: 150px;
+            gap: 20px; /* Jarak antar tombol */
+            margin-top: 30px;
         }
 
         button {
             padding: 15px 40px;
-            font-size: 1.2rem;
-            font-weight: bold;
+            font-size: 1.1rem;
+            font-weight: 600;
             border: none;
             border-radius: 50px;
             cursor: pointer;
-            transition: transform 0.2s;
-            width: 80%;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-
-        #yes-btn {
-            background-color: var(--primary-pink);
-            color: white;
-            z-index: 10;
-        }
-
-        #no-btn {
-            background-color: white;
-            color: var(--primary-pink);
-            position: absolute;
-            top: 75px; /* Jarak di bawah tombol Mau */
             transition: all 0.3s ease;
+            width: 200px;
+            touch-action: manipulation;
+        }
+
+        #btn-mau {
+            background: var(--primary-pink);
+            color: white;
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.4);
+            z-index: 2;
+        }
+
+        #btn-tidak {
+            background: white;
+            color: var(--primary-pink);
+            position: relative;
+            z-index: 1;
         }
 
         /* Halaman Sukses */
-        .success-content {
+        #success-page {
             display: none;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.5s ease;
+            transition: opacity 1s ease;
         }
 
-        .show-success .main-content { display: none; }
-        .show-success .success-content { 
-            display: block; 
-            opacity: 1; 
-            transform: scale(1);
-        }
-
-        /* Efek Transisi Keren */
-        .flash-effect {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        .sparkle {
+            position: absolute;
             background: white;
-            z-index: 100;
-            opacity: 0;
+            border-radius: 50%;
             pointer-events: none;
-        }
-
-        @keyframes pink-flash {
-            0% { opacity: 0; }
-            50% { opacity: 1; }
-            100% { opacity: 0; }
         }
     </style>
 </head>
 <body>
 
-    <div id="particles"></div>
-    <div class="flash-effect" id="flash"></div>
+    <div class="bg-hearts" id="hearts-container"></div>
 
-    <div class="container" id="main-card">
-        <div class="main-content">
-            <div class="gif-container">
-                <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExOHpueGZ3bmZqZzR3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/cmCHuk53AiFY2ZxlYm/giphy.gif" alt="Cute Cat">
-            </div>
-            <h1>Halo Sayang... ✨<br>Mau gak jadi pacar aku? 🥺🌷</h1>
-            
-            <div class="buttons" id="btn-wrapper">
-                <button id="yes-btn" onclick="celebrate()">MAAAUUU!!! 💖</button>
-                <button id="no-btn" onmouseover="moveNoButton()" onclick="moveNoButton()">GAAAKKK MAUUUU!!! 🏃‍♂️</button>
-            </div>
-        </div>
-
-        <div class="success-content">
-            <img src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2Z4eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3eGZ3JmVwPXYxX2ludGVybmFsX2dpZl9ieV9pZCZjdD1z/K97pG8vC3qE/giphy.gif" width="150" style="margin-bottom: 20px;">
-            <h1>ASIIIQQQQ I LOVE U SAYAAANNGGG! 🌸💕✨</h1>
-            <p style="font-size: 1.1rem;">JADI MAU CIUUUMM IIIHHHH!!!!!!!!</p>
+    <div class="card" id="main-card">
+        <span class="emoji-main">💖</span>
+        <h1 id="question">Will you be mine? ✨</h1>
+        <div class="btn-container">
+            <button id="btn-mau" onclick="accepted()">Mau! 🥰</button>
+            <button id="btn-tidak" onmouseover="moveButton()" onclick="moveButton()">Enggak 😋</button>
         </div>
     </div>
 
+    <div class="card" id="success-page">
+        <span class="emoji-main">🎉</span>
+        <h1>Yeeay! I Love You! ❤️</h1>
+        <p style="color: #c9184a;">Makasih udah nerima aku, cantik! 🌸✨</p>
+        <span style="font-size: 3rem; display: block; margin-top: 15px;">👩‍❤️‍👨</span>
+    </div>
+
     <script>
-        // Animasi Hati Berjatuhan
+        // Efek Heart Berjatuhan
         function createHeart() {
             const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
+            heart.innerHTML = '🌸';
+            heart.style.position = 'absolute';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.top = '-20px';
             heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-            heart.style.zIndex = '1';
             heart.style.opacity = Math.random();
-            heart.style.transition = 'transform 3s linear, top 3s linear';
+            heart.style.transform = `rotate(${Math.random() * 360}deg)`;
+            heart.style.transition = 'top 5s linear, opacity 5s ease-out';
             
-            document.getElementById('particles').appendChild(heart);
+            document.getElementById('hearts-container').appendChild(heart);
 
             setTimeout(() => {
                 heart.style.top = '110vh';
-                heart.style.transform = `translateX(${Math.random() * 100 - 50}px) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
             }, 100);
 
-            setTimeout(() => heart.remove(), 3000);
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
         }
+
         setInterval(createHeart, 300);
 
-        // Logika Tombol "Gak Mau" yang Berpindah secara Pintar
-        const noBtn = document.getElementById('no-btn');
-        const container = document.getElementById('main-card');
-
-        function moveNoButton() {
-            const padding = 20;
-            const containerRect = container.getBoundingClientRect();
-            const btnRect = noBtn.getBoundingClientRect();
-
-            // Menghitung batas maksimal perpindahan di dalam container iPhone 13
-            const maxX = containerRect.width - btnRect.width - padding;
-            const maxY = containerRect.height - btnRect.height - padding;
-
-            // Posisi acak baru
-            const randomX = Math.floor(Math.random() * maxX);
-            const randomY = Math.floor(Math.random() * maxY);
-
-            // Terapkan posisi baru
-            noBtn.style.position = 'absolute';
-            noBtn.style.left = randomX + 'px';
-            noBtn.style.top = randomY + 'px';
-        }
-
-        // Fungsi Transisi Keren saat Klik Mau
-        function celebrate() {
-            const flash = document.getElementById('flash');
+        // Logika Tombol "Tidak Mau" agar tetap di layar iPhone 13
+        function moveButton() {
+            const btn = document.getElementById('btn-tidak');
             const card = document.getElementById('main-card');
             
-            // Efek Flash Cahaya
-            flash.style.animation = 'pink-flash 0.6s ease-out';
+            // Batasan agar tombol tidak keluar dari area layar iPhone
+            const padding = 20;
+            const maxX = window.innerWidth - btn.offsetWidth - padding;
+            const maxY = window.innerHeight - btn.offsetHeight - padding;
+
+            const randomX = Math.max(padding, Math.floor(Math.random() * maxX));
+            const randomY = Math.max(padding, Math.floor(Math.random() * maxY));
+
+            btn.style.position = 'fixed';
+            btn.style.left = randomX + 'px';
+            btn.style.top = randomY + 'px';
             
+            // Efek berkedip saat pindah
+            btn.style.opacity = '0';
             setTimeout(() => {
-                card.classList.add('show-success');
-                // Tambahkan lebih banyak hati
-                for(let i=0; i<50; i++) {
-                    setTimeout(createHeart, i * 50);
+                btn.style.opacity = '1';
+            }, 50);
+        }
+
+        // Transisi Canggih Saat "Mau" Ditekan
+        function accepted() {
+            const mainCard = document.getElementById('main-card');
+            const successPage = document.getElementById('success-page');
+            
+            // Efek Zoom Out & Fade Out pada kartu utama
+            mainCard.style.transform = 'scale(0) rotate(10deg)';
+            mainCard.style.opacity = '0';
+
+            setTimeout(() => {
+                mainCard.style.display = 'none';
+                successPage.style.display = 'block';
+                
+                // Trigger animasi partikel (konfeti kecil)
+                for(let i=0; i<30; i++) {
+                    createSparkle();
                 }
-            }, 300);
+                
+                setTimeout(() => {
+                    successPage.style.opacity = '1';
+                    successPage.style.transform = 'scale(1)';
+                }, 50);
+            }, 500);
+        }
+
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            const size = Math.random() * 10 + 5 + 'px';
+            sparkle.style.width = size;
+            sparkle.style.height = size;
+            sparkle.style.left = '50%';
+            sparkle.style.top = '50%';
+            sparkle.style.background = `hsl(${Math.random() * 360}, 100%, 75%)`;
+            
+            document.body.appendChild(sparkle);
+
+            const destinationX = (Math.random() - 0.5) * 500;
+            const destinationY = (Math.random() - 0.5) * 500;
+
+            sparkle.animate([
+                { transform: 'translate(0, 0) scale(1)', opacity: 1 },
+                { transform: `translate(${destinationX}px, ${destinationY}px) scale(0)`, opacity: 0 }
+            ], {
+                duration: 1000,
+                easing: 'cubic-bezier(0, .9, .57, 1)'
+            });
+
+            setTimeout(() => sparkle.remove(), 1000);
         }
     </script>
 </body>
