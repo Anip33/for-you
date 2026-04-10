@@ -16,7 +16,7 @@
 
         body {
             width: 100vw;
-            height: 100dvh; /* Dynamic height untuk iOS 26.1 */
+            height: 100dvh;
             overflow: hidden;
             background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 100%);
             display: flex;
@@ -25,201 +25,180 @@
             position: relative;
         }
 
-        /* Background Hati Melayang */
-        .floating-hearts {
+        /* Background Bunga Sakura */
+        .sakura-bg {
             position: absolute;
             width: 100%;
             height: 100%;
-            overflow: hidden;
-            z-index: 1;
             pointer-events: none;
+            z-index: 1;
         }
 
         .container {
             width: 85%;
             max-width: 350px;
-            background: rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 35px;
-            padding: 40px 25px;
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 30px 20px;
             text-align: center;
-            border: 1.5px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             z-index: 10;
-        }
-
-        .emoji-header {
-            font-size: 4rem;
-            margin-bottom: 15px;
-            display: block;
+            transition: all 0.5s ease;
         }
 
         h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 2.2rem;
+            font-size: 2rem;
             color: #590d22;
-            margin-bottom: 15px;
+            margin: 15px 0;
         }
 
         p {
             font-size: 1rem;
             color: #800f2f;
-            margin-bottom: 30px;
-            line-height: 1.5;
+            margin-bottom: 25px;
         }
 
-        .btn-wrapper {
+        .btn-container {
             display: flex;
             flex-direction: column;
-            gap: 20px; /* Jarak aman antara tombol Mau dan Enggak */
+            gap: 15px; /* Jarak pas atas-bawah */
             align-items: center;
             width: 100%;
         }
 
         .btn {
-            width: 100%;
-            padding: 18px;
+            width: 200px;
+            padding: 15px;
             border: none;
-            border-radius: 20px;
+            border-radius: 50px;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.2s ease;
         }
 
-        #btn-yes {
+        #btn-mau {
             background: #ff4d6d;
             color: white;
-            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+            z-index: 11;
         }
 
-        #btn-no {
+        #btn-ga {
             background: white;
             color: #ff4d6d;
-            border: 1px solid #ff4d6d;
-            /* Kita kunci ukurannya agar kalkulasi JS akurat */
-            min-width: 180px; 
+            border: 2px solid #ff4d6d;
+            position: relative; /* Posisi awal */
+            z-index: 12;
         }
 
         /* Halaman Sukses */
-        #success-page {
+        #success {
             display: none;
             opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.6s ease;
+            transform: scale(0.9);
         }
 
-        .success-emoji {
-            font-size: 5rem;
-            animation: bounce 1s infinite;
+        .floating {
+            animation: float 3s ease-in-out infinite;
         }
 
-        @keyframes bounce {
+        @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="floating-hearts" id="heart-box"></div>
+    <div class="sakura-bg" id="sakura"></div>
 
     <div class="container" id="main-card">
-        <span class="emoji-header">🧸</span>
-        <h1>Haii Sayang... ✨</h1>
-        <p>Aku mau nanya sesuatu yang serius,<br><b>Kamu mau gak jadi pacarku?</b> 🥺</p>
+        <div style="font-size: 4rem;" class="floating">🧸</div>
+        <h1>Sayang... ✨</h1>
+        <p>Kamu mau gak jadi pacarku? <br>Jangan bilang enggak ya 🥺👉👈</p>
         
-        <div class="btn-wrapper">
-            <button class="btn" id="btn-yes" onclick="celebrate()">Mau Banget! 💖</button>
-            <button class="btn" id="btn-no" onmouseover="runAway()" onclick="runAway()">Enggak Dulu 😋</button>
+        <div class="btn-container">
+            <button class="btn" id="btn-mau" onclick="diterima()">Mau! 🥰</button>
+            <button class="btn" id="btn-ga" onmouseover="kabur()" onclick="kabur()">Enggak 😋</button>
         </div>
     </div>
 
-    <div class="container" id="success-page">
-        <div class="success-emoji">👩‍❤️‍👨</div>
-        <h1>Yeeayy! I Love You! ❤️</h1>
-        <p>Hari ini bakal jadi hari yang paling <br>spesial buat aku. Makasih ya! ✨</p>
+    <div class="container" id="success">
+        <div style="font-size: 4rem;">💖</div>
+        <h1>I Love You! ❤️</h1>
+        <p>Makasih ya udah nerima aku. <br>I'm the luckiest person! 🌸✨</p>
+        <button class="btn" id="btn-mau" onclick="location.reload()">😘😘😘</button>
     </div>
 
     <script>
-<script>
-    // Efek Bunga Sakura Berjatuhan
-    function createHeart() {
-        const heart = document.createElement('div');
-        heart.innerHTML = '🌸';
-        heart.style.position = 'absolute';
-        heart.style.left = Math.random() * 100 + 'vw';
-        heart.style.top = '-20px';
-        heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-        heart.style.opacity = Math.random();
-        heart.style.pointerEvents = 'none';
-        document.getElementById('heart-box').appendChild(heart);
+        // Efek Kelopak Bunga
+        function buatSakura() {
+            const s = document.createElement('div');
+            s.innerHTML = '🌸';
+            s.style.position = 'absolute';
+            s.style.left = Math.random() * 100 + 'vw';
+            s.style.top = '-20px';
+            s.style.fontSize = Math.random() * 15 + 10 + 'px';
+            s.style.opacity = Math.random();
+            s.style.pointerEvents = 'none';
+            document.getElementById('sakura').appendChild(s);
 
-        const duration = Math.random() * 3 + 3;
-        heart.animate([
-            { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-            { transform: `translateY(110dvh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-        ], { duration: duration * 1000 });
+            const durasi = Math.random() * 3 + 4;
+            s.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: `translateY(100dvh) rotate(360deg)`, opacity: 0 }
+            ], { duration: durasi * 1000 });
 
-        setTimeout(() => heart.remove(), duration * 1000);
-    }
-    setInterval(createHeart, 300);
+            setTimeout(() => s.remove(), durasi * 1000);
+        }
+        setInterval(buatSakura, 400);
 
-    // LOGIKA KABUR YANG DIPERKETAT (Radius Kecil)
-    function runAway() {
-        const btn = document.getElementById('btn-no');
-        
-        // Mengambil ukuran layar iPhone 13
-        const screenWidth = window.innerWidth;
-        const screenHeight = window.innerHeight;
+        // LOGIKA KABUR TERKUNCI (Tidak Akan Hilang)
+        function kabur() {
+            const btn = document.getElementById('btn-ga');
+            
+            // Kita batasi hanya bergerak di area tengah layar (aman untuk iPhone 13)
+            // Tombol tidak akan lari ke pojok layar
+            const minX = window.innerWidth * 0.15;
+            const maxX = window.innerWidth * 0.55;
+            const minY = window.innerHeight * 0.25;
+            const maxY = window.innerHeight * 0.65;
 
-        // Kuncinya di sini: Kita batasi area munculnya hanya di 60% area tengah layar
-        // Agar tombol tidak pernah terlalu mepet ke pinggir/notch
-        const minX = screenWidth * 0.2; // Mulai dari 20% lebar layar
-        const maxX = screenWidth * 0.6; // Sampai 60% lebar layar
-        
-        const minY = screenHeight * 0.3; // Mulai dari 30% tinggi layar
-        const maxY = screenHeight * 0.7; // Sampai 70% tinggi layar
+            const x = Math.floor(Math.random() * (maxX - minX)) + minX;
+            const y = Math.floor(Math.random() * (maxY - minY)) + minY;
 
-        const randomX = Math.floor(Math.random() * (maxX - minX)) + minX;
-        const randomY = Math.floor(Math.random() * (maxY - minY)) + minY;
+            btn.style.position = 'fixed';
+            btn.style.left = x + 'px';
+            btn.style.top = y + 'px';
+            btn.style.transition = '0.15s ease-out';
+            // Beri glow agar tetap terlihat
+            btn.style.boxShadow = '0 0 20px #ff4d6d';
+        }
 
-        // Terapkan posisi baru
-        btn.style.position = 'fixed';
-        btn.style.zIndex = '9999';
-        btn.style.left = randomX + 'px';
-        btn.style.top = randomY + 'px';
-        
-        // Tambahkan efek sedikit bergetar agar terlihat "panik"
-        btn.style.transition = 'all 0.15s ease-out';
-        btn.style.boxShadow = '0 0 15px rgba(255, 77, 109, 0.8)'; // Glow agar mudah dicari
-    }
+        // FUNGSI TERIMA
+        function diterima() {
+            const card = document.getElementById('main-card');
+            const success = document.getElementById('success');
+            const btnGa = document.getElementById('btn-ga');
 
-    // TRANSISI HALUS KE HALAMAN SUKSES
-    function celebrate() {
-        const main = document.getElementById('main-card');
-        const success = document.getElementById('success-page');
-        const btnNo = document.getElementById('btn-no');
-
-        // Sembunyikan tombol Enggak selamanya
-        btnNo.style.display = 'none';
-
-        // Animasi transisi canggih
-        main.style.transition = '0.6s cubic-bezier(0.4, 0, 0.2, 1)';
-        main.style.transform = 'scale(0.8) translateY(-30px)';
-        main.style.opacity = '0';
-
-        setTimeout(() => {
-            main.style.display = 'none';
-            success.style.display = 'block';
+            btnGa.style.display = 'none';
+            card.style.opacity = '0';
+            card.style.transform = 'scale(0.8)';
             
             setTimeout(() => {
-                success.style.opacity = '1';
-                success.style.transform = 'scale(1)';
-            }, 50);
-        }, 600);
-    }
-</script>
+                card.style.display = 'none';
+                success.style.display = 'block';
+                setTimeout(() => {
+                    success.style.opacity = '1';
+                    success.style.transform = 'scale(1)';
+                }, 50);
+            }, 500);
+        }
+    </script>
 </body>
 </html>
