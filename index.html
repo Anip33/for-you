@@ -183,9 +183,12 @@ function moveButton() {
 
     const yesRect = yesBtn.getBoundingClientRect();
 
-    // 🔥 AREA TERLARANG (diperbesar biar aman)
+    const btnW = noBtn.offsetWidth;
+    const btnH = noBtn.offsetHeight;
+
     const padding = 40;
 
+    // area terlarang (diperbesar)
     const forbidden = {
         left: yesRect.left - padding,
         right: yesRect.right + padding,
@@ -193,21 +196,30 @@ function moveButton() {
         bottom: yesRect.bottom + padding
     };
 
-    let x, y, safe;
+    let x, y, safe = false;
+    let tries = 0;
 
-    do {
-        x = Math.random() * maxX;
-        y = Math.random() * maxY;
+    while (!safe && tries < 100) {
+        // random dalam layar (pakai ukuran tombol)
+        x = Math.random() * (390 - btnW);
+        y = Math.random() * (844 - btnH);
 
-        // cek apakah masuk area terlarang
+        // cek tidak masuk area terlarang
         safe = !(
             x < forbidden.right &&
-            x + 120 > forbidden.left &&
+            x + btnW > forbidden.left &&
             y < forbidden.bottom &&
-            y + 50 > forbidden.top
+            y + btnH > forbidden.top
         );
 
-    } while (!safe);
+        tries++;
+    }
+
+    // fallback kalau terlalu sempit
+    if (!safe) {
+        x = (390 / 2) - (btnW / 2);
+        y = 844 - btnH - 20; // bawah layar aman
+    }
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
