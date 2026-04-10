@@ -2,171 +2,240 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=390, height=844, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=390, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>For You 💖</title>
 
 <style>
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
 body {
-    width: 390px;
-    height: 844px;
+    margin: 0;
     overflow: hidden;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    position: relative;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    background: radial-gradient(circle at top, #ff9a9e, #ff4d6d);
 }
 
-/* Floating hearts */
-.heart {
+/* BACKGROUND GLOW */
+.glow {
     position: absolute;
-    color: white;
-    animation: float 6s linear infinite;
-    opacity: 0.7;
+    width: 300px;
+    height: 300px;
+    background: rgba(255,255,255,0.2);
+    filter: blur(100px);
+    border-radius: 50%;
+    animation: moveGlow 10s infinite alternate;
 }
 
-@keyframes float {
-    0% { transform: translateY(100vh) scale(0.5); }
-    100% { transform: translateY(-10vh) scale(1.2); }
+@keyframes moveGlow {
+    0% { transform: translate(0,0); }
+    100% { transform: translate(100px,200px); }
 }
 
-/* Container */
-.page {
-    width: 100%;
+.container {
     height: 100%;
-    position: absolute;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    backdrop-filter: blur(10px);
-    transition: all 0.8s ease;
+    position: relative;
+    text-align: center;
+    padding: 20px;
 }
 
-/* Hidden page */
-.hidden {
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.8);
-}
-
-/* Text */
 h1 {
     color: white;
-    text-align: center;
     font-size: 26px;
-    margin-bottom: 30px;
+    text-shadow: 0 0 15px rgba(255,255,255,0.8);
 }
 
-/* Buttons */
-.btn {
-    width: 220px;
-    padding: 14px;
-    border-radius: 30px;
+/* BUTTON STYLE */
+button {
+    padding: 16px 28px;
+    border-radius: 25px;
     border: none;
-    margin: 10px;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
-    transition: 0.3s;
+    width: 220px;
+    margin: 12px;
 }
 
 /* YES BUTTON */
-.yes {
-    background: #ff4d6d;
+#yesBtn {
+    background: linear-gradient(45deg, #ff4d6d, #ff85a1);
     color: white;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    box-shadow: 0 0 20px rgba(255,255,255,0.5);
+    transition: all 0.3s ease;
 }
 
-.yes:active {
-    transform: scale(1.2);
-    background: #ff1e4d;
+#yesBtn:active {
+    transform: scale(1.3) rotate(5deg);
+    box-shadow: 0 0 50px white;
 }
 
 /* NO BUTTON */
-.no {
+#noBtn {
+    position: absolute;
     background: white;
     color: #ff4d6d;
-    position: relative;
 }
 
-/* Success animation */
-@keyframes loveBurst {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.5) rotate(10deg); }
-    100% { transform: scale(1); }
+/* HEART PARTICLE */
+.heart {
+    position: absolute;
+    font-size: 20px;
+    animation: float 6s linear infinite;
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(100vh) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-10vh) scale(2);
+        opacity: 0;
+    }
+}
+
+/* CONFETTI */
+.confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background: white;
+    animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+    to {
+        transform: translate(var(--x), var(--y));
+        opacity: 0;
+    }
+}
+
+/* PAGE 2 */
+.page2 {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, #ff4d6d, #ff85a1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    transform: scale(0);
+    transition: transform 0.8s cubic-bezier(0.68,-0.55,0.27,1.55);
+}
+
+.show {
+    transform: scale(1);
+}
+
+.love-text {
+    color: white;
+    font-size: 28px;
+    text-align: center;
+    animation: fadeIn 1s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- PAGE 1 -->
-<div class="page" id="page1">
-    <h1>💖 Mau jadi pacarku? 💖</h1>
-    
-    <button class="btn yes" onclick="acceptLove()">Mau 💕</button>
-    <button class="btn no" id="noBtn">Tidak Mau 😢</button>
+<div class="glow"></div>
+
+<div class="container">
+    <h1>💖 Mau jadi pacarku? 🥺💖</h1>
+
+    <button id="yesBtn">Iya aku mau 😳💘</button>
+    <button id="noBtn">Tidak mau 🙄</button>
 </div>
 
-<!-- PAGE 2 -->
-<div class="page hidden" id="page2">
-    <h1>💞 Yeay!!! 💞<br>Kamu sekarang milikku 💖</h1>
+<div class="page2" id="page2">
+    <div class="love-text">
+        AKHIRNYA 😭💖<br><br>
+        Aku beneran seneng banget! 🥺💕<br>
+        Sekarang kita resmi 💘😳
+    </div>
 </div>
 
 <script>
-
-/* HEART ANIMATION */
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
-
-    heart.style.left = Math.random() * 100 + "vw";
-    heart.style.fontSize = (20 + Math.random() * 20) + "px";
-
-    document.body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, 6000);
-}
-setInterval(createHeart, 500);
-
-/* NO BUTTON MOVE */
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
+const page2 = document.getElementById("page2");
 
-noBtn.addEventListener("touchstart", moveButton);
-noBtn.addEventListener("mouseover", moveButton);
+/* BATAS LAYAR IPHONE 13 */
+const maxX = 320;
+const maxY = 650;
 
 function moveButton() {
-    const maxX = 390 - 220; 
-    const maxY = 844 - 60;
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
 
-    const x = Math.random() * maxX;
-    const y = Math.random() * maxY;
-
-    noBtn.style.position = "absolute";
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
 
-/* ACCEPT LOVE */
-function acceptLove() {
-    const page1 = document.getElementById("page1");
-    const page2 = document.getElementById("page2");
+noBtn.addEventListener("mouseover", moveButton);
+noBtn.addEventListener("click", moveButton);
 
-    page1.style.animation = "loveBurst 0.6s";
+/* HEART GENERATOR */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = ["💖","💘","💕","💓"][Math.floor(Math.random()*4)];
 
-    setTimeout(() => {
-        page1.classList.add("hidden");
-        page2.classList.remove("hidden");
-    }, 500);
+    heart.style.left = Math.random()*100 + "vw";
+    heart.style.fontSize = (Math.random()*25 + 10) + "px";
+
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(),6000);
 }
 
+setInterval(createHeart, 200);
+
+/* CONFETTI EXPLOSION */
+function createConfetti() {
+    for(let i=0;i<50;i++){
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+
+        let x = (Math.random()-0.5)*400 + "px";
+        let y = (Math.random()-0.5)*600 + "px";
+
+        conf.style.setProperty("--x", x);
+        conf.style.setProperty("--y", y);
+
+        conf.style.left = "50%";
+        conf.style.top = "50%";
+
+        document.body.appendChild(conf);
+
+        setTimeout(()=>conf.remove(),1000);
+    }
+}
+
+/* CLICK YES */
+yesBtn.addEventListener("click", ()=>{
+    createConfetti();
+
+    for(let i=0;i<40;i++){
+        createHeart();
+    }
+
+    setTimeout(()=>{
+        page2.classList.add("show");
+    },500);
+});
+
+/* INIT */
+moveButton();
 </script>
 
 </body>
