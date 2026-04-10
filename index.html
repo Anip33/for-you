@@ -13,10 +13,16 @@
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-body {
+/* LOCK SCROLL */
+html, body {
     width: 390px;
     height: 844px;
+    position: fixed;
     overflow: hidden;
+    touch-action: none;
+}
+
+body {
     background: linear-gradient(135deg, #ff9ecf, #ffc1e3);
     display: flex;
     justify-content: center;
@@ -136,8 +142,7 @@ h1 {
 <body>
 
 <div id="page1" class="page">
-    <h1>Haiii Sayaaanggg 🥰<br>Kamu mau nggak jadi pacar aku?🥺👉👈 </h1>
-
+    <h1>💖 Kamu mau jadi pacarku? 💖</h1>
 
     <button class="btn yes" onclick="acceptLove()">😍 Mau</button>
     <button class="btn no" id="noBtn">😢 Tidak Mau</button>
@@ -145,28 +150,29 @@ h1 {
 
 <div id="page2" class="page hidden success">
     <div class="big-heart">💖</div>
-    <h1>ASIIIQQQQQQ I LOVE U SAYAAANGGG🥰💖<br>AKU JADI MAUU CIUUUMMM IIHHHH😖😖😖</h1>
+    <h1>YEAAY!! 🥰💖<br>Aku seneng banget kamu mau! 💕</h1>
 </div>
 
 <script>
+// cegah scroll iOS
+document.addEventListener("touchmove", function(e) {
+    e.preventDefault();
+}, { passive: false });
+
 const maxX = 390 - 120;
 const maxY = 844 - 60;
 
 const noBtn = document.getElementById("noBtn");
 const page1 = document.getElementById("page1");
 
-// POSISI AWAL DI BAWAH TOMBOL MAU
+// posisi awal sejajar & di bawah tombol mau
 window.onload = () => {
     const yesBtn = document.querySelector(".yes");
     const yesRect = yesBtn.getBoundingClientRect();
 
-    // center horizontal layar (bukan kira-kira lagi)
     let posX = (390 / 2) - (noBtn.offsetWidth / 2);
-
-    // tepat di bawah tombol mau + jarak aman
     let posY = yesRect.bottom + 30;
 
-    // jaga tetap di dalam layar
     if (posY > 844 - 60) posY = 844 - 60;
 
     noBtn.style.left = posX + "px";
@@ -187,7 +193,7 @@ setInterval(() => {
     setTimeout(() => heart.remove(), 5000);
 }, 300);
 
-// TOMBOL KABUR + GELENG
+// tombol kabur + geleng
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
@@ -202,7 +208,7 @@ function moveButton() {
     noBtn.style.top = randomY + "px";
 }
 
-// HEART TRAIL
+// heart trail
 document.addEventListener("touchmove", createHeart);
 document.addEventListener("mousemove", createHeart);
 
@@ -219,7 +225,7 @@ function createHeart(e) {
     setTimeout(() => heart.remove(), 1000);
 }
 
-// MAU → 1000 LOVE
+// MAU → 1000 LOVE NAIK
 function acceptLove() {
     const total = 1000;
     let count = 0;
