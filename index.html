@@ -13,7 +13,7 @@
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* LOCK SCREEN */
+/* LOCK */
 html, body {
     width: 390px;
     height: 844px;
@@ -65,27 +65,28 @@ h1 {
 .yes {
     background: #ff4fa3;
     color: white;
+    position: relative;
+    z-index: 2;
 }
 
 .no {
     background: white;
     color: #ff4fa3;
     position: absolute;
+    transition: left 0.25s ease, top 0.25s ease; /* 🔥 biar halus */
 }
 
-/* LOVE RAIN FIX (lebih ringan & stabil) */
+/* RAIN */
 .rain-container {
     position: absolute;
     width: 100%;
     height: 100%;
-    overflow: hidden;
     pointer-events: none;
 }
 
 .rain-heart {
     position: absolute;
     top: -20px;
-    font-size: 18px;
     animation: rain 4s linear forwards;
 }
 
@@ -96,32 +97,15 @@ h1 {
     }
 }
 
-/* HEART TRAIL */
-.heart {
-    position: absolute;
-    font-size: 18px;
-    pointer-events: none;
-    animation: float 1s forwards;
-}
-
-@keyframes float {
-    to {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-}
-
 /* SHAKE */
 .shake {
     animation: shakeAnim 0.4s;
 }
 
 @keyframes shakeAnim {
-    0% { transform: translateX(0); }
     25% { transform: translateX(-10px); }
     50% { transform: translateX(10px); }
     75% { transform: translateX(-10px); }
-    100% { transform: translateX(0); }
 }
 
 /* PAGE 2 */
@@ -147,7 +131,7 @@ h1 {
 
     <h1>💖 Kamu mau jadi pacarku? 💖</h1>
 
-    <button class="btn yes" onclick="acceptLove()">😍 Mau</button>
+    <button class="btn yes" id="yesBtn" onclick="acceptLove()">😍 Mau</button>
     <button class="btn no" id="noBtn">😢 Tidak Mau</button>
 </div>
 
@@ -157,39 +141,39 @@ h1 {
 </div>
 
 <script>
-// cegah scroll
 document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
 
 const noBtn = document.getElementById("noBtn");
+const yesBtn = document.getElementById("yesBtn");
 const rain = document.getElementById("rain");
 const page1 = document.getElementById("page1");
 
-// posisi awal tombol
+const maxX = 390 - 120;
+const maxY = 844 - 60;
+
+// posisi awal
 window.onload = () => {
-    const yesBtn = document.querySelector(".yes");
-    const rect = yesBtn.getBoundingClientRect();
+    let rect = yesBtn.getBoundingClientRect();
 
-    let posX = (390 / 2) - (noBtn.offsetWidth / 2);
-    let posY = rect.bottom + 30;
+    let x = (390 / 2) - (noBtn.offsetWidth / 2);
+    let y = rect.bottom + 30;
 
-    noBtn.style.left = posX + "px";
-    noBtn.style.top = posY + "px";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 };
 
-// LOVE RAIN (STABIL)
+// LOVE RAIN
 setInterval(() => {
-    let heart = document.createElement("div");
-    heart.className = "rain-heart";
-    heart.innerHTML = "💖";
+    let h = document.createElement("div");
+    h.className = "rain-heart";
+    h.innerHTML = "💖";
+    h.style.left = Math.random() * 390 + "px";
 
-    heart.style.left = Math.random() * 390 + "px";
-
-    rain.appendChild(heart);
-
-    setTimeout(() => heart.remove(), 4000);
+    rain.appendChild(h);
+    setTimeout(() => h.remove(), 4000);
 }, 250);
 
-// tombol kabur
+// MOVE BUTTON (ANTI TABRAK + HALUS)
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
@@ -197,46 +181,57 @@ function moveButton() {
     page1.classList.add("shake");
     setTimeout(() => page1.classList.remove("shake"), 400);
 
-    let x = Math.random() * (390 - 120);
-    let y = Math.random() * (844 - 60);
+    let yesRect = yesBtn.getBoundingClientRect();
+
+    let x, y, safe;
+
+    do {
+        x = Math.random() * maxX;
+        y = Math.random() * maxY;
+
+        // cek apakah tabrakan dengan tombol mau
+        safe = !(
+            x < yesRect.right &&
+            x + 120 > yesRect.left &&
+            y < yesRect.bottom &&
+            y + 50 > yesRect.top
+        );
+
+    } while (!safe);
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
 
 // HEART TRAIL
-document.addEventListener("touchmove", createHeart);
 document.addEventListener("mousemove", createHeart);
+document.addEventListener("touchmove", createHeart);
 
 function createHeart(e) {
-    let heart = document.createElement("div");
-    heart.className = "heart";
-    heart.innerHTML = "💖";
+    let h = document.createElement("div");
+    h.innerHTML = "💖";
+    h.style.position = "absolute";
+    h.style.left = (e.touches ? e.touches[0].clientX : e.clientX) + "px";
+    h.style.top = (e.touches ? e.touches[0].clientY : e.clientY) + "px";
+    h.style.pointerEvents = "none";
 
-    heart.style.left = (e.touches ? e.touches[0].clientX : e.clientX) + "px";
-    heart.style.top = (e.touches ? e.touches[0].clientY : e.clientY) + "px";
-
-    document.body.appendChild(heart);
-    setTimeout(() => heart.remove(), 1000);
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 800);
 }
 
-// MAU → LOVE BANJIR
+// ACCEPT LOVE
 function acceptLove() {
-    let total = 800; // dikurangi biar smooth
     let count = 0;
 
     let interval = setInterval(() => {
         for (let i = 0; i < 20; i++) {
-            if (count >= total) break;
-
             let love = document.createElement("div");
             love.innerHTML = "😍";
-            love.style.pointerEvents = "none";
-
             love.style.position = "absolute";
             love.style.left = Math.random() * 390 + "px";
             love.style.top = "844px";
             love.style.transition = "1.5s";
+            love.style.pointerEvents = "none";
 
             document.body.appendChild(love);
 
@@ -246,11 +241,11 @@ function acceptLove() {
             }, 10);
 
             setTimeout(() => love.remove(), 1500);
-
-            count++;
         }
 
-        if (count >= total) clearInterval(interval);
+        count += 20;
+        if (count >= 800) clearInterval(interval);
+
     }, 40);
 
     page1.classList.add("hidden");
