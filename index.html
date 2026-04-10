@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=390, height=844, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>For You 💖</title>
 
 <style>
@@ -13,10 +13,10 @@
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* LOCK */
+/* LOCK SCROLL */
 html, body {
-    width: 390px;
-    height: 844px;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     position: fixed;
     touch-action: none;
@@ -65,34 +65,49 @@ h1 {
 .yes {
     background: #ff4fa3;
     color: white;
-    position: relative;
-    z-index: 2;
 }
 
 .no {
     background: white;
     color: #ff4fa3;
     position: absolute;
-    transition: left 0.25s ease, top 0.25s ease; /* 🔥 biar halus */
+    transition: left 0.25s ease, top 0.25s ease;
 }
 
-/* RAIN */
+/* LOVE RAIN */
 .rain-container {
     position: absolute;
     width: 100%;
     height: 100%;
     pointer-events: none;
+    overflow: hidden;
 }
 
 .rain-heart {
     position: absolute;
     top: -20px;
+    font-size: 18px;
     animation: rain 4s linear forwards;
 }
 
 @keyframes rain {
     to {
         transform: translateY(900px);
+        opacity: 0;
+    }
+}
+
+/* HEART TRAIL */
+.heart {
+    position: absolute;
+    font-size: 18px;
+    pointer-events: none;
+    animation: float 1s forwards;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(-50px);
         opacity: 0;
     }
 }
@@ -148,32 +163,33 @@ const yesBtn = document.getElementById("yesBtn");
 const rain = document.getElementById("rain");
 const page1 = document.getElementById("page1");
 
-const maxX = 390 - 120;
-const maxY = 844 - 60;
+const vw = window.innerWidth;
+const vh = window.innerHeight;
 
-// posisi awal
+// POSISI AWAL (di bawah tombol mau)
 window.onload = () => {
-    let rect = yesBtn.getBoundingClientRect();
+    const rect = yesBtn.getBoundingClientRect();
 
-    let x = (390 / 2) - (noBtn.offsetWidth / 2);
+    let x = (vw / 2) - (noBtn.offsetWidth / 2);
     let y = rect.bottom + 30;
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 };
 
-// LOVE RAIN
+// LOVE RAIN (STABIL)
 setInterval(() => {
     let h = document.createElement("div");
     h.className = "rain-heart";
     h.innerHTML = "💖";
-    h.style.left = Math.random() * 390 + "px";
+
+    h.style.left = Math.random() * vw + "px";
 
     rain.appendChild(h);
     setTimeout(() => h.remove(), 4000);
 }, 250);
 
-// MOVE BUTTON (ANTI TABRAK + HALUS)
+// MOVE BUTTON (ANTI TABRAK + RESPONSIVE)
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
@@ -186,9 +202,8 @@ function moveButton() {
     const btnW = noBtn.offsetWidth;
     const btnH = noBtn.offsetHeight;
 
-    const padding = 40;
+    const padding = 60;
 
-    // area terlarang (diperbesar)
     const forbidden = {
         left: yesRect.left - padding,
         right: yesRect.right + padding,
@@ -200,11 +215,10 @@ function moveButton() {
     let tries = 0;
 
     while (!safe && tries < 100) {
-        // random dalam layar (pakai ukuran tombol)
-        x = Math.random() * (390 - btnW);
-        y = Math.random() * (844 - btnH);
 
-        // cek tidak masuk area terlarang
+        x = Math.random() * (vw - btnW);
+        y = Math.random() * (vh - btnH);
+
         safe = !(
             x < forbidden.right &&
             x + btnW > forbidden.left &&
@@ -215,15 +229,15 @@ function moveButton() {
         tries++;
     }
 
-    // fallback kalau terlalu sempit
     if (!safe) {
-        x = (390 / 2) - (btnW / 2);
-        y = 844 - btnH - 20; // bawah layar aman
+        x = (vw / 2) - (btnW / 2);
+        y = vh - btnH - 30;
     }
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
+
 // HEART TRAIL
 document.addEventListener("mousemove", createHeart);
 document.addEventListener("touchmove", createHeart);
@@ -240,32 +254,34 @@ function createHeart(e) {
     setTimeout(() => h.remove(), 800);
 }
 
-// ACCEPT LOVE
+// ACCEPT LOVE (FULL SCREEN EFFECT)
 function acceptLove() {
     let count = 0;
+    const total = 600;
 
     let interval = setInterval(() => {
         for (let i = 0; i < 20; i++) {
+
             let love = document.createElement("div");
             love.innerHTML = "😍";
             love.style.position = "absolute";
-            love.style.left = Math.random() * 390 + "px";
-            love.style.top = "844px";
-            love.style.transition = "1.5s";
+            love.style.left = Math.random() * vw + "px";
+            love.style.top = vh + "px";
             love.style.pointerEvents = "none";
+            love.style.transition = "1.5s linear";
 
             document.body.appendChild(love);
 
             setTimeout(() => {
-                love.style.transform = "translateY(-900px)";
+                love.style.transform = `translateY(-${vh + 200}px)`;
                 love.style.opacity = 0;
             }, 10);
 
-            setTimeout(() => love.remove(), 1500);
+            setTimeout(() => love.remove(), 1600);
         }
 
         count += 20;
-        if (count >= 800) clearInterval(interval);
+        if (count >= total) clearInterval(interval);
 
     }, 40);
 
