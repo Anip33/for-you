@@ -35,7 +35,6 @@ body {
     transition: all 0.8s ease;
 }
 
-/* TRANSISI */
 .hidden {
     opacity: 0;
     transform: scale(0.8);
@@ -106,6 +105,48 @@ h1 {
     50% { transform: scale(1.2); }
     100% { transform: scale(1); }
 }
+
+/* LOVE RAIN */
+.rain-heart {
+    position: absolute;
+    top: -20px;
+    font-size: 20px;
+    animation: rain 4s linear infinite;
+}
+
+@keyframes rain {
+    to {
+        transform: translateY(900px);
+        opacity: 0;
+    }
+}
+
+/* SHAKE EFFECT */
+.shake {
+    animation: shakeAnim 0.4s;
+}
+
+@keyframes shakeAnim {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    50% { transform: translateX(10px); }
+    75% { transform: translateX(-10px); }
+    100% { transform: translateX(0); }
+}
+
+/* LOVE BURST */
+.love-burst {
+    position: absolute;
+    font-size: 25px;
+    animation: burst 1s forwards;
+}
+
+@keyframes burst {
+    to {
+        transform: translateY(-200px) scale(1.5);
+        opacity: 0;
+    }
+}
 </style>
 </head>
 
@@ -131,6 +172,7 @@ const maxX = 390 - 120;
 const maxY = 844 - 60;
 
 const noBtn = document.getElementById("noBtn");
+const page1 = document.getElementById("page1");
 
 // POSISI AWAL
 let posX = 200;
@@ -139,11 +181,33 @@ let posY = 500;
 noBtn.style.left = posX + "px";
 noBtn.style.top = posY + "px";
 
-// TOMBOL KABUR (TAPI TETAP DALAM LAYAR)
+// HUJAN LOVE TERUS MENERUS
+setInterval(() => {
+    let heart = document.createElement("div");
+    heart.className = "rain-heart";
+    heart.innerHTML = "💖";
+
+    heart.style.left = Math.random() * 390 + "px";
+    heart.style.animationDuration = (3 + Math.random() * 2) + "s";
+
+    page1.appendChild(heart);
+
+    setTimeout(() => heart.remove(), 5000);
+}, 300);
+
+// TOMBOL KABUR + GELENG 2x
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
 function moveButton() {
+    // efek geleng 2x
+    page1.classList.add("shake");
+
+    setTimeout(() => page1.classList.remove("shake"), 400);
+    setTimeout(() => page1.classList.add("shake"), 500);
+    setTimeout(() => page1.classList.remove("shake"), 900);
+
+    // pindah posisi tetap di layar
     let randomX = Math.random() * maxX;
     let randomY = Math.random() * maxY;
 
@@ -151,7 +215,7 @@ function moveButton() {
     noBtn.style.top = randomY + "px";
 }
 
-// EFEK LOVE TRAIL
+// HEART TRAIL
 document.addEventListener("touchmove", createHeart);
 document.addEventListener("mousemove", createHeart);
 
@@ -165,21 +229,31 @@ function createHeart(e) {
 
     document.body.appendChild(heart);
 
-    setTimeout(() => {
-        heart.remove();
-    }, 1000);
+    setTimeout(() => heart.remove(), 1000);
 }
 
-// TRANSISI KE HALAMAN 2
+// KLIK MAU → LOVE BURST + TRANSISI
 function acceptLove() {
-    const page1 = document.getElementById("page1");
+    for (let i = 0; i < 30; i++) {
+        let love = document.createElement("div");
+        love.className = "love-burst";
+        love.innerHTML = "😍";
+
+        love.style.left = (Math.random() * 390) + "px";
+        love.style.top = (Math.random() * 844) + "px";
+
+        document.body.appendChild(love);
+
+        setTimeout(() => love.remove(), 1000);
+    }
+
     const page2 = document.getElementById("page2");
 
     page1.classList.add("hidden");
 
     setTimeout(() => {
         page2.classList.remove("hidden");
-    }, 500);
+    }, 700);
 }
 </script>
 
