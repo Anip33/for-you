@@ -18,7 +18,6 @@ body {
     height: 100vh;
     overflow: hidden;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
-    position: relative;
 }
 
 /* PAGE */
@@ -33,12 +32,12 @@ body {
     transition: all 0.8s ease;
 }
 
-/* SECOND PAGE */
+/* PAGE 2 */
 #page2 {
     opacity: 0;
     transform: scale(1.3);
-    pointer-events: none;
     filter: blur(10px);
+    pointer-events: none;
 }
 
 /* TEXT */
@@ -50,32 +49,44 @@ h1 {
     padding: 0 20px;
 }
 
-/* BUTTONS */
+/* BUTTON WRAPPER */
+.btn-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+/* BUTTON */
 .btn {
     width: 240px;
     padding: 16px;
     border: none;
     border-radius: 40px;
     font-size: 18px;
-    margin: 12px;
     transition: 0.3s;
 }
 
-/* YES BUTTON */
+/* YES */
 #yesBtn {
     background: white;
     color: #ff4d6d;
     font-weight: bold;
 }
 
-/* NO BUTTON */
+/* NO (default rapi) */
 #noBtn {
     background: #ff4d6d;
     color: white;
-    position: relative; /* awalnya ikut layout normal */
+    position: relative;
 }
 
-/* HEART */
+/* mode kabur */
+.no-escape {
+    position: absolute !important;
+}
+
+/* HEART + CONFETTI */
 .heart, .confetti {
     position: absolute;
     font-size: 20px;
@@ -111,13 +122,15 @@ h1 {
 <div id="page1" class="page">
     <h1>💖 Kamu mau jadi pacarku nggak? 🥺</h1>
 
-    <button id="yesBtn" class="btn">Mau 💕</button>
-    <button id="noBtn" class="btn">Tidak 😢</button>
+    <div class="btn-wrap">
+        <button id="yesBtn" class="btn">Mau 💕</button>
+        <button id="noBtn" class="btn">Tidak 😢</button>
+    </div>
 </div>
 
 <!-- PAGE 2 -->
 <div id="page2" class="page">
-    <h1>💖 YAAAY!!! 💖<br>Aku serius seneng banget 😭💕</h1>
+    <h1>💖 YAAAY!!! 💖<br>Aku beneran seneng banget 😭💕</h1>
 </div>
 
 <script>
@@ -127,7 +140,9 @@ const page1 = document.getElementById("page1");
 const page2 = document.getElementById("page2");
 const music = document.getElementById("music");
 
-/* SCREEN SIZE */
+let escapeMode = false;
+
+/* batas layar */
 function getMax() {
     return {
         w: window.innerWidth - 240,
@@ -135,7 +150,7 @@ function getMax() {
     };
 }
 
-/* MOVE NO BUTTON */
+/* gerakin tombol */
 function moveNoBtn() {
     const max = getMax();
     let x = Math.random() * max.w;
@@ -145,13 +160,26 @@ function moveNoBtn() {
     noBtn.style.top = y + "px";
 }
 
-/* EVENTS */
-noBtn.addEventListener("touchstart", moveNoBtn);
-noBtn.addEventListener("mouseover", moveNoBtn);
+/* aktif kabur setelah disentuh */
+function activateEscape() {
+    if (!escapeMode) {
+        escapeMode = true;
+        noBtn.classList.add("no-escape");
+        moveNoBtn();
+    }
+}
+
+/* EVENT */
+noBtn.addEventListener("touchstart", activateEscape);
+noBtn.addEventListener("mouseover", activateEscape);
+
+noBtn.addEventListener("mouseenter", () => {
+    if (escapeMode) moveNoBtn();
+});
 
 /* YES CLICK */
 yesBtn.addEventListener("click", () => {
-    // HAPTIC (iPhone)
+
     if (navigator.vibrate) navigator.vibrate(50);
 
     music.play();
@@ -166,7 +194,7 @@ yesBtn.addEventListener("click", () => {
     }, 500);
 });
 
-/* HEART EFFECT */
+/* HEART */
 function createHearts() {
     for (let i = 0; i < 25; i++) {
         let el = document.createElement("div");
@@ -195,16 +223,13 @@ function createConfetti() {
     }
 }
 
-/* PARALLAX iPhone */
+/* PARALLAX */
 window.addEventListener("deviceorientation", (e) => {
     let x = e.gamma / 20;
     let y = e.beta / 20;
 
     document.body.style.transform = `translate(${x}px, ${y}px)`;
 });
-
-/* INIT */
-moveNoBtn();
 </script>
 
 </body>
