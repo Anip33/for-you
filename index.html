@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For My Future 💖</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(180deg, #ffafbd 0%, #ffc3a0 100%);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+        }
+
+        /* Glassmorphism Card - Cocok dengan gaya iOS */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 30px;
+            width: 85vw; /* Optimal untuk layar iPhone 13 */
+            max-width: 350px;
+            padding: 40px 20px;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        .btn-love {
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            touch-action: manipulation;
+        }
+
+        #noBtn {
+            position: absolute;
+            transition: all 0.2s ease-in-out;
+            z-index: 10;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            animation: float 6s infinite ease-in-out;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(20deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="floating-emoji" style="top: 10%; left: 10%; font-size: 3rem;">🌸</div>
+    <div class="floating-emoji" style="bottom: 15%; right: 10%; font-size: 2.5rem;">✨</div>
+    <div class="floating-emoji" style="top: 50%; right: 5%; font-size: 2rem;">🍭</div>
+
+    <div id="mainPage" class="glass-card">
+        <div class="text-6xl mb-6">💖</div>
+        <h1 class="text-2xl font-bold text-white mb-2">Hai Sayang...</h1>
+        <p class="text-white text-opacity-90 mb-8">Aku mau tanya sesuatu yang penting banget. Kamu mau nggak jadi pacar aku? 🥺👉👈</p>
+        
+        <div class="flex flex-col gap-4 items-center">
+            <button onclick="accepted()" class="btn-love bg-white text-pink-500 font-bold py-4 px-12 rounded-full shadow-lg text-xl w-full">
+                MAAUUU!!! 🎀
+            </button>
+            <button id="noBtn" onmouseover="moveButton()" onclick="moveButton()" ontouchstart="moveButton()" class="btn-love bg-pink-600 text-white font-semibold py-2 px-6 rounded-full text-sm">
+                GAMAUUU!!! 😶‍🌫️
+            </button>
+        </div>
+    </div>
+
+    <div id="successPage" class="glass-card hidden">
+        <div class="text-7xl mb-6">🥳🌈</div>
+        <h1 class="text-3xl font-bold text-white mb-4">YAYYY! ❤️</h1>
+        <p class="text-white text-opacity-90 mb-6 leading-relaxed">
+            I LOVE U SAYAANGGG MAU CIUM IH <br><br>
+            <i>AKU SAYANG BANGET SAMA KAMUUUUUUUU!!!!!!!!!!! 🌙✨</i>
+        </p>
+        <div class="text-4xl">👩‍❤️‍👨</div>
+    </div>
+
+    <script>
+        function moveButton() {
+            const noBtn = document.getElementById('noBtn');
+            
+            // Logika acak agar tetap berada dalam area layar iPhone 13
+            const padding = 50;
+            const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+            const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+            
+            const randomX = Math.floor(Math.random() * maxX);
+            const randomY = Math.floor(Math.random() * maxY);
+            
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            
+            // Efek menghilang sejenak (opacity)
+            noBtn.style.opacity = "0";
+            setTimeout(() => {
+                noBtn.style.opacity = "1";
+            }, 100);
+        }
+
+        function accepted() {
+            // Haptic Feedback simulasi (iPhone getar sedikit jika didukung)
+            if (navigator.vibrate) {
+                navigator.vibrate([100, 50, 100]);
+            }
+
+            document.getElementById('mainPage').classList.add('hidden');
+            const successPage = document.getElementById('successPage');
+            successPage.classList.remove('hidden');
+            
+            // Tambahkan efek konfeti sederhana
+            setInterval(createHeart, 300);
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.classList.add('fixed', 'text-2xl', 'pointer-events-none');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.transition = 'all 3s linear';
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.style.transform = `translateY(-110vh) rotate(${Math.random() * 360}deg)`;
+                heart.style.opacity = '0';
+            }, 50);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
