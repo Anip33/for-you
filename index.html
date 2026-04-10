@@ -1,204 +1,29 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Special for You ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-            font-family: 'Quicksand', sans-serif;
-        }
-
-        body {
-            width: 100vw;
-            height: 100dvh;
-            overflow: hidden;
-            background: linear-gradient(180deg, #ff9a9e 0%, #fecfef 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-        }
-
-        /* Background Bunga Sakura */
-        .sakura-bg {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .container {
-            width: 85%;
-            max-width: 350px;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border-radius: 30px;
-            padding: 30px 20px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            z-index: 10;
-            transition: all 0.5s ease;
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: 2rem;
-            color: #590d22;
-            margin: 15px 0;
-        }
-
-        p {
-            font-size: 1rem;
-            color: #800f2f;
-            margin-bottom: 25px;
-        }
-
-        .btn-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px; /* Jarak pas atas-bawah */
-            align-items: center;
-            width: 100%;
-        }
-
-        .btn {
-            width: 200px;
-            padding: 15px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-
-        #btn-mau {
-            background: #ff4d6d;
-            color: white;
-            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
-            z-index: 11;
-        }
-
-        #btn-ga {
-            background: white;
-            color: #ff4d6d;
-            border: 2px solid #ff4d6d;
-            position: relative; /* Posisi awal */
-            z-index: 12;
-        }
-
-        /* Halaman Sukses */
-        #success {
-            display: none;
-            opacity: 0;
-            transform: scale(0.9);
-        }
-
-        .floating {
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=390, height=844, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Untuk Kamu 💖</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="sakura-bg" id="sakura"></div>
+<div class="container" id="page1">
+  <h1>Hai Kamu 💕</h1>
+  <p>Aku punya sesuatu yang ingin aku tanyakan...</p>
 
-    <div class="container" id="main-card">
-        <div style="font-size: 4rem;" class="floating">🧸</div>
-        <h1>Sayang... ✨</h1>
-        <p>Kamu mau gak jadi pacarku? <br>Jangan bilang enggak ya 🥺👉👈</p>
-        
-        <div class="btn-container">
-            <button class="btn" id="btn-mau" onclick="diterima()">Mau! 🥰</button>
-            <button class="btn" id="btn-ga" onmouseover="kabur()" onclick="kabur()">Enggak 😋</button>
-        </div>
-    </div>
+  <div class="buttons">
+    <button id="yesBtn">💖 Mau</button>
+    <button id="noBtn">😢 Tidak Mau</button>
+  </div>
+</div>
 
-    <div class="container" id="success">
-        <div style="font-size: 4rem;">💖</div>
-        <h1>I Love You! ❤️</h1>
-        <p>Makasih ya udah nerima aku. <br>I'm the luckiest person! 🌸✨</p>
-        <button class="btn" id="btn-mau" onclick="location.reload()">😘😘😘</button>
-    </div>
+<div class="container hidden" id="page2">
+  <h1>YAYYY 😍💖</h1>
+  <p>Aku senang banget kamu nerima aku 🥺💕</p>
+  <div class="heart-burst"></div>
+</div>
 
-    <script>
-        // Efek Kelopak Bunga
-        function buatSakura() {
-            const s = document.createElement('div');
-            s.innerHTML = '🌸';
-            s.style.position = 'absolute';
-            s.style.left = Math.random() * 100 + 'vw';
-            s.style.top = '-20px';
-            s.style.fontSize = Math.random() * 15 + 10 + 'px';
-            s.style.opacity = Math.random();
-            s.style.pointerEvents = 'none';
-            document.getElementById('sakura').appendChild(s);
-
-            const durasi = Math.random() * 3 + 4;
-            s.animate([
-                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                { transform: `translateY(100dvh) rotate(360deg)`, opacity: 0 }
-            ], { duration: durasi * 1000 });
-
-            setTimeout(() => s.remove(), durasi * 1000);
-        }
-        setInterval(buatSakura, 400);
-
-        // LOGIKA KABUR TERKUNCI (Tidak Akan Hilang)
-        function kabur() {
-            const btn = document.getElementById('btn-ga');
-            
-            // Kita batasi hanya bergerak di area tengah layar (aman untuk iPhone 13)
-            // Tombol tidak akan lari ke pojok layar
-            const minX = window.innerWidth * 0.15;
-            const maxX = window.innerWidth * 0.55;
-            const minY = window.innerHeight * 0.25;
-            const maxY = window.innerHeight * 0.65;
-
-            const x = Math.floor(Math.random() * (maxX - minX)) + minX;
-            const y = Math.floor(Math.random() * (maxY - minY)) + minY;
-
-            btn.style.position = 'fixed';
-            btn.style.left = x + 'px';
-            btn.style.top = y + 'px';
-            btn.style.transition = '0.15s ease-out';
-            // Beri glow agar tetap terlihat
-            btn.style.boxShadow = '0 0 20px #ff4d6d';
-        }
-
-        // FUNGSI TERIMA
-        function diterima() {
-            const card = document.getElementById('main-card');
-            const success = document.getElementById('success');
-            const btnGa = document.getElementById('btn-ga');
-
-            btnGa.style.display = 'none';
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            
-            setTimeout(() => {
-                card.style.display = 'none';
-                success.style.display = 'block';
-                setTimeout(() => {
-                    success.style.opacity = '1';
-                    success.style.transform = 'scale(1)';
-                }, 50);
-            }, 500);
-        }
-    </script>
+<script src="script.js"></script>
 </body>
 </html>
