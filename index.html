@@ -143,78 +143,83 @@
     </div>
 
     <script>
-        // Efek Hati Berjatuhan
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '🌸';
-            heart.style.position = 'absolute';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.top = '-20px';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.style.opacity = Math.random();
-            heart.style.pointerEvents = 'none';
-            document.getElementById('heart-box').appendChild(heart);
+<script>
+    // Efek Bunga Sakura Berjatuhan
+    function createHeart() {
+        const heart = document.createElement('div');
+        heart.innerHTML = '🌸';
+        heart.style.position = 'absolute';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.top = '-20px';
+        heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+        heart.style.opacity = Math.random();
+        heart.style.pointerEvents = 'none';
+        document.getElementById('heart-box').appendChild(heart);
 
-            const duration = Math.random() * 3 + 3;
-            heart.animate([
-                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
-                { transform: `translateY(110dvh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
-            ], { duration: duration * 1000 });
+        const duration = Math.random() * 3 + 3;
+        heart.animate([
+            { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+            { transform: `translateY(110dvh) rotate(${Math.random() * 360}deg)`, opacity: 0 }
+        ], { duration: duration * 1000 });
 
-            setTimeout(() => heart.remove(), duration * 1000);
-        }
-        setInterval(createHeart, 300);
+        setTimeout(() => heart.remove(), duration * 1000);
+    }
+    setInterval(createHeart, 300);
 
-        // LOGIKA KABUR TERBAIK (Khusus iPhone 13)
-        function runAway() {
-            const btn = document.getElementById('btn-no');
+    // LOGIKA KABUR YANG DIPERKETAT (Radius Kecil)
+    function runAway() {
+        const btn = document.getElementById('btn-no');
+        
+        // Mengambil ukuran layar iPhone 13
+        const screenWidth = window.innerWidth;
+        const screenHeight = window.innerHeight;
+
+        // Kuncinya di sini: Kita batasi area munculnya hanya di 60% area tengah layar
+        // Agar tombol tidak pernah terlalu mepet ke pinggir/notch
+        const minX = screenWidth * 0.2; // Mulai dari 20% lebar layar
+        const maxX = screenWidth * 0.6; // Sampai 60% lebar layar
+        
+        const minY = screenHeight * 0.3; // Mulai dari 30% tinggi layar
+        const maxY = screenHeight * 0.7; // Sampai 70% tinggi layar
+
+        const randomX = Math.floor(Math.random() * (maxX - minX)) + minX;
+        const randomY = Math.floor(Math.random() * (maxY - minY)) + minY;
+
+        // Terapkan posisi baru
+        btn.style.position = 'fixed';
+        btn.style.zIndex = '9999';
+        btn.style.left = randomX + 'px';
+        btn.style.top = randomY + 'px';
+        
+        // Tambahkan efek sedikit bergetar agar terlihat "panik"
+        btn.style.transition = 'all 0.15s ease-out';
+        btn.style.boxShadow = '0 0 15px rgba(255, 77, 109, 0.8)'; // Glow agar mudah dicari
+    }
+
+    // TRANSISI HALUS KE HALAMAN SUKSES
+    function celebrate() {
+        const main = document.getElementById('main-card');
+        const success = document.getElementById('success-page');
+        const btnNo = document.getElementById('btn-no');
+
+        // Sembunyikan tombol Enggak selamanya
+        btnNo.style.display = 'none';
+
+        // Animasi transisi canggih
+        main.style.transition = '0.6s cubic-bezier(0.4, 0, 0.2, 1)';
+        main.style.transform = 'scale(0.8) translateY(-30px)';
+        main.style.opacity = '0';
+
+        setTimeout(() => {
+            main.style.display = 'none';
+            success.style.display = 'block';
             
-            // Padding 60px agar tidak kena Notch atau pinggiran tajam layar
-            const padding = 60;
-            
-            // Kalkulasi Area yang Benar-benar terlihat di layar
-            const availableWidth = window.innerWidth - btn.offsetWidth - (padding * 2);
-            const availableHeight = window.innerHeight - btn.offsetHeight - (padding * 2);
-
-            // Koordinat Random
-            const randomX = Math.floor(Math.random() * availableWidth) + padding;
-            const randomY = Math.floor(Math.random() * availableHeight) + padding;
-
-            // Terapkan posisi Fixed
-            btn.style.position = 'fixed';
-            btn.style.zIndex = '1000';
-            btn.style.left = randomX + 'px';
-            btn.style.top = randomY + 'px';
-            
-            // Efek mengecil dikit biar makin susah diklik
-            btn.style.transform = 'scale(0.95)';
-        }
-
-        // TRANSISI CANGGIH
-        function celebrate() {
-            const main = document.getElementById('main-card');
-            const success = document.getElementById('success-page');
-            const btnNo = document.getElementById('btn-no');
-
-            // Hapus tombol No
-            btnNo.style.display = 'none';
-
-            // Animasi transisi ala aplikasi iOS
-            main.style.opacity = '0';
-            main.style.transform = 'translateY(-50px) scale(0.9)';
-            main.style.transition = '0.5s ease-out';
-
             setTimeout(() => {
-                main.style.display = 'none';
-                success.style.display = 'block';
-                
-                // Trigger masuknya halaman sukses
-                setTimeout(() => {
-                    success.style.opacity = '1';
-                    success.style.transform = 'scale(1)';
-                }, 50);
-            }, 500);
-        }
-    </script>
+                success.style.opacity = '1';
+                success.style.transform = 'scale(1)';
+            }, 50);
+        }, 600);
+    }
+</script>
 </body>
 </html>
