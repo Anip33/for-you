@@ -23,7 +23,6 @@ body {
     align-items: center;
 }
 
-/* HALAMAN */
 .page {
     position: absolute;
     width: 100%;
@@ -41,7 +40,6 @@ body {
     pointer-events: none;
 }
 
-/* TEKS */
 h1 {
     font-size: 28px;
     color: white;
@@ -49,7 +47,6 @@ h1 {
     margin-bottom: 40px;
 }
 
-/* BUTTON */
 .btn {
     padding: 15px 25px;
     border-radius: 30px;
@@ -60,14 +57,12 @@ h1 {
     margin: 10px;
 }
 
-/* Tombol Mau */
 .yes {
     background: #ff4fa3;
     color: white;
     box-shadow: 0 0 20px rgba(255, 79, 163, 0.6);
 }
 
-/* Tombol Tidak Mau */
 .no {
     background: white;
     color: #ff4fa3;
@@ -88,7 +83,7 @@ h1 {
     }
 }
 
-/* HALAMAN 2 */
+/* PAGE 2 */
 .success {
     background: linear-gradient(135deg, #ff4fa3, #ff85c1);
     color: white;
@@ -121,7 +116,7 @@ h1 {
     }
 }
 
-/* SHAKE EFFECT */
+/* SHAKE 1x */
 .shake {
     animation: shakeAnim 0.4s;
 }
@@ -134,7 +129,7 @@ h1 {
     100% { transform: translateX(0); }
 }
 
-/* LOVE BURST */
+/* LOVE FULL SCREEN */
 .love-burst {
     position: absolute;
     font-size: 25px;
@@ -152,7 +147,6 @@ h1 {
 
 <body>
 
-<!-- HALAMAN 1 -->
 <div id="page1" class="page">
     <h1>💖 Kamu mau jadi pacarku? 💖</h1>
 
@@ -160,28 +154,23 @@ h1 {
     <button class="btn no" id="noBtn">😢 Tidak Mau</button>
 </div>
 
-<!-- HALAMAN 2 -->
 <div id="page2" class="page hidden success">
     <div class="big-heart">💖</div>
     <h1>YEAAY!! 🥰💖<br>Aku seneng banget kamu mau! 💕</h1>
 </div>
 
 <script>
-// BATAS LAYAR IPHONE 13
 const maxX = 390 - 120;
 const maxY = 844 - 60;
 
 const noBtn = document.getElementById("noBtn");
 const page1 = document.getElementById("page1");
 
-// POSISI AWAL
-let posX = 200;
-let posY = 500;
+// posisi awal
+noBtn.style.left = "200px";
+noBtn.style.top = "500px";
 
-noBtn.style.left = posX + "px";
-noBtn.style.top = posY + "px";
-
-// HUJAN LOVE TERUS MENERUS
+// LOVE RAIN
 setInterval(() => {
     let heart = document.createElement("div");
     heart.className = "rain-heart";
@@ -195,19 +184,17 @@ setInterval(() => {
     setTimeout(() => heart.remove(), 5000);
 }, 300);
 
-// TOMBOL KABUR + GELENG 2x
+// TOMBOL KABUR + GELENG 1x
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
 function moveButton() {
-    // efek geleng 2x
     page1.classList.add("shake");
 
-    setTimeout(() => page1.classList.remove("shake"), 400);
-    setTimeout(() => page1.classList.add("shake"), 500);
-    setTimeout(() => page1.classList.remove("shake"), 900);
+    setTimeout(() => {
+        page1.classList.remove("shake");
+    }, 400);
 
-    // pindah posisi tetap di layar
     let randomX = Math.random() * maxX;
     let randomY = Math.random() * maxY;
 
@@ -232,19 +219,28 @@ function createHeart(e) {
     setTimeout(() => heart.remove(), 1000);
 }
 
-// KLIK MAU → LOVE BURST + TRANSISI
+// MAU → FULL LAYAR LOVE 😍
 function acceptLove() {
-    for (let i = 0; i < 30; i++) {
-        let love = document.createElement("div");
-        love.className = "love-burst";
-        love.innerHTML = "😍";
+    const totalX = 10;
+    const totalY = 16;
 
-        love.style.left = (Math.random() * 390) + "px";
-        love.style.top = (Math.random() * 844) + "px";
+    const spacingX = 390 / totalX;
+    const spacingY = 844 / totalY;
 
-        document.body.appendChild(love);
+    for (let x = 0; x < totalX; x++) {
+        for (let y = 0; y < totalY; y++) {
 
-        setTimeout(() => love.remove(), 1000);
+            let love = document.createElement("div");
+            love.className = "love-burst";
+            love.innerHTML = "😍";
+
+            love.style.left = (x * spacingX + 10) + "px";
+            love.style.top = (y * spacingY + 10) + "px";
+
+            document.body.appendChild(love);
+
+            setTimeout(() => love.remove(), 1200);
+        }
     }
 
     const page2 = document.getElementById("page2");
@@ -253,7 +249,7 @@ function acceptLove() {
 
     setTimeout(() => {
         page2.classList.remove("hidden");
-    }, 700);
+    }, 800);
 }
 </script>
 
