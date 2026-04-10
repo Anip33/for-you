@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>For You 💖</title>
 
 <style>
@@ -14,7 +14,6 @@
 }
 
 body {
-    width: 100vw;
     height: 100vh;
     overflow: hidden;
     background: linear-gradient(135deg, #ff9a9e, #fad0c4);
@@ -24,92 +23,64 @@ body {
 .page {
     width: 100%;
     height: 100%;
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    transition: all 0.8s ease;
+    position: relative;
 }
 
-/* PAGE 2 */
-#page2 {
-    opacity: 0;
-    transform: scale(1.3);
-    filter: blur(10px);
-    pointer-events: none;
+/* CENTER */
+.center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
 }
 
 /* TEXT */
 h1 {
-    text-align: center;
-    font-size: 26px;
     color: white;
-    margin-bottom: 40px;
-    padding: 0 20px;
-}
-
-/* BUTTON WRAPPER */
-.btn-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
+    margin-bottom: 30px;
+    font-size: 24px;
 }
 
 /* BUTTON */
 .btn {
     width: 240px;
     padding: 16px;
-    border: none;
     border-radius: 40px;
+    border: none;
     font-size: 18px;
-    transition: 0.3s;
 }
 
 /* YES */
 #yesBtn {
     background: white;
     color: #ff4d6d;
-    font-weight: bold;
+    margin-bottom: 12px;
 }
 
-/* NO (default rapi) */
+/* NO (selalu absolute biar stabil) */
 #noBtn {
     background: #ff4d6d;
     color: white;
-    position: relative;
-}
-
-/* mode kabur */
-.no-escape {
-    position: absolute !important;
-}
-
-/* HEART + CONFETTI */
-.heart, .confetti {
     position: absolute;
-    font-size: 20px;
-    animation: floatUp 3s linear forwards;
 }
 
-@keyframes floatUp {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-300px) scale(2); opacity: 0; }
+/* PAGE 2 */
+#page2 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    opacity: 0;
+    transform: scale(1.2);
+    transition: 0.6s;
 }
 
-/* TRANSITION */
 .show {
     opacity: 1 !important;
     transform: scale(1) !important;
-    filter: blur(0) !important;
-    pointer-events: all !important;
-}
-
-.hide {
-    opacity: 0;
-    transform: scale(0.8);
-    filter: blur(10px);
 }
 </style>
 </head>
@@ -118,118 +89,93 @@ h1 {
 
 <audio id="music" src="https://www.bensound.com/bensound-music/bensound-romantic.mp3"></audio>
 
-<!-- PAGE 1 -->
 <div id="page1" class="page">
-    <h1>💖 Kamu mau jadi pacarku nggak? 🥺</h1>
+    <div class="center">
+        <h1>💖 Kamu mau jadi pacarku nggak? 🥺</h1>
 
-    <div class="btn-wrap">
         <button id="yesBtn" class="btn">Mau 💕</button>
         <button id="noBtn" class="btn">Tidak 😢</button>
     </div>
 </div>
 
-<!-- PAGE 2 -->
 <div id="page2" class="page">
-    <h1>💖 YAAAY!!! 💖<br>Aku beneran seneng banget 😭💕</h1>
+    <div class="center">
+        <h1>💖 YAAAY!!! 💖<br>Aku seneng banget 😭💕</h1>
+    </div>
 </div>
 
 <script>
 const noBtn = document.getElementById("noBtn");
 const yesBtn = document.getElementById("yesBtn");
-const page1 = document.getElementById("page1");
 const page2 = document.getElementById("page2");
 const music = document.getElementById("music");
 
 let escapeMode = false;
 
-/* batas layar */
-function getMax() {
-    return {
-        w: window.innerWidth - 240,
-        h: window.innerHeight - 100
-    };
+/* POSISI AWAL (rapi di bawah tombol mau) */
+function setInitialPosition() {
+    const yesRect = yesBtn.getBoundingClientRect();
+
+    noBtn.style.left = yesRect.left + "px";
+    noBtn.style.top = (yesRect.bottom + 12) + "px";
 }
 
-/* gerakin tombol */
-function moveNoBtn() {
-    const max = getMax();
-    let x = Math.random() * max.w;
-    let y = Math.random() * max.h;
+/* GERAK AMAN (tidak dekat tombol mau) */
+function moveNoBtnSafe() {
+    const w = window.innerWidth - noBtn.offsetWidth;
+    const h = window.innerHeight - noBtn.offsetHeight;
+
+    const yesRect = yesBtn.getBoundingClientRect();
+
+    let x, y;
+    let safe = false;
+
+    while (!safe) {
+        x = Math.random() * w;
+        y = Math.random() * h;
+
+        if (
+            x > yesRect.right + 30 ||
+            x + noBtn.offsetWidth < yesRect.left - 30 ||
+            y > yesRect.bottom + 30 ||
+            y + noBtn.offsetHeight < yesRect.top - 30
+        ) {
+            safe = true;
+        }
+    }
 
     noBtn.style.left = x + "px";
     noBtn.style.top = y + "px";
 }
 
-/* aktif kabur setelah disentuh */
-function activateEscape() {
-    if (!escapeMode) {
-        escapeMode = true;
-        noBtn.classList.add("no-escape");
-        moveNoBtn();
-    }
-}
+/* EVENT ANTI TEMBUS */
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    escapeMode = true;
+    moveNoBtnSafe();
+});
 
-/* EVENT */
-noBtn.addEventListener("touchstart", activateEscape);
-noBtn.addEventListener("mouseover", activateEscape);
+noBtn.addEventListener("mouseover", (e) => {
+    e.stopPropagation();
+    escapeMode = true;
+    moveNoBtnSafe();
+});
 
 noBtn.addEventListener("mouseenter", () => {
-    if (escapeMode) moveNoBtn();
+    if (escapeMode) moveNoBtnSafe();
 });
 
-/* YES CLICK */
+/* YES BUTTON */
 yesBtn.addEventListener("click", () => {
-
     if (navigator.vibrate) navigator.vibrate(50);
-
     music.play();
-
-    createHearts();
-    createConfetti();
-
-    page1.classList.add("hide");
-
-    setTimeout(() => {
-        page2.classList.add("show");
-    }, 500);
+    page2.classList.add("show");
 });
 
-/* HEART */
-function createHearts() {
-    for (let i = 0; i < 25; i++) {
-        let el = document.createElement("div");
-        el.className = "heart";
-        el.innerHTML = "💖";
-        el.style.left = Math.random() * window.innerWidth + "px";
-        el.style.bottom = "0px";
-
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
-    }
-}
-
-/* CONFETTI */
-function createConfetti() {
-    const emojis = ["💖","✨","💕","🎉"];
-    for (let i = 0; i < 30; i++) {
-        let el = document.createElement("div");
-        el.className = "confetti";
-        el.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
-        el.style.left = Math.random() * window.innerWidth + "px";
-        el.style.bottom = "0px";
-
-        document.body.appendChild(el);
-        setTimeout(() => el.remove(), 3000);
-    }
-}
-
-/* PARALLAX */
-window.addEventListener("deviceorientation", (e) => {
-    let x = e.gamma / 20;
-    let y = e.beta / 20;
-
-    document.body.style.transform = `translate(${x}px, ${y}px)`;
-});
+/* INIT */
+window.onload = setInitialPosition;
+window.onresize = setInitialPosition;
 </script>
 
 </body>
