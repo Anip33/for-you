@@ -160,11 +160,13 @@ window.onload = () => {
     const yesBtn = document.querySelector(".yes");
     const yesRect = yesBtn.getBoundingClientRect();
 
-    let posX = yesRect.left + (yesRect.width / 2) - 60;
+    // center horizontal layar (bukan kira-kira lagi)
+    let posX = (390 / 2) - (noBtn.offsetWidth / 2);
+
+    // tepat di bawah tombol mau + jarak aman
     let posY = yesRect.bottom + 30;
 
-    if (posX < 0) posX = 10;
-    if (posX > 390 - 120) posX = 390 - 120;
+    // jaga tetap di dalam layar
     if (posY > 844 - 60) posY = 844 - 60;
 
     noBtn.style.left = posX + "px";
