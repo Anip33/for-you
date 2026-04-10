@@ -13,17 +13,17 @@
     font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* LOCK SCROLL */
+/* LOCK SCREEN */
 html, body {
     width: 390px;
     height: 844px;
-    position: fixed;
     overflow: hidden;
+    position: fixed;
     touch-action: none;
+    background: linear-gradient(135deg, #ff9ecf, #ffc1e3);
 }
 
 body {
-    background: linear-gradient(135deg, #ff9ecf, #ffc1e3);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -59,14 +59,12 @@ h1 {
     border: none;
     font-size: 18px;
     cursor: pointer;
-    transition: 0.3s;
     margin: 10px;
 }
 
 .yes {
     background: #ff4fa3;
     color: white;
-    box-shadow: 0 0 20px rgba(255, 79, 163, 0.6);
 }
 
 .no {
@@ -75,51 +73,40 @@ h1 {
     position: absolute;
 }
 
-/* HEART TRAIL */
-.heart {
+/* LOVE RAIN FIX (lebih ringan & stabil) */
+.rain-container {
     position: absolute;
-    font-size: 20px;
-    animation: float 1s ease-out forwards;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
     pointer-events: none;
 }
 
-@keyframes float {
-    to {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-}
-
-/* PAGE 2 */
-.success {
-    background: linear-gradient(135deg, #ff4fa3, #ff85c1);
-    color: white;
-    text-align: center;
-}
-
-.big-heart {
-    font-size: 60px;
-    animation: pulse 1s infinite;
-}
-
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-    100% { transform: scale(1); }
-}
-
-/* LOVE RAIN */
 .rain-heart {
     position: absolute;
     top: -20px;
-    font-size: 20px;
-    animation: rain 4s linear infinite;
-    pointer-events: none;
+    font-size: 18px;
+    animation: rain 4s linear forwards;
 }
 
 @keyframes rain {
     to {
         transform: translateY(900px);
+        opacity: 0;
+    }
+}
+
+/* HEART TRAIL */
+.heart {
+    position: absolute;
+    font-size: 18px;
+    pointer-events: none;
+    animation: float 1s forwards;
+}
+
+@keyframes float {
+    to {
+        transform: translateY(-50px);
         opacity: 0;
     }
 }
@@ -136,12 +123,28 @@ h1 {
     75% { transform: translateX(-10px); }
     100% { transform: translateX(0); }
 }
+
+/* PAGE 2 */
+.success {
+    background: linear-gradient(135deg, #ff4fa3, #ff85c1);
+}
+
+.big-heart {
+    font-size: 60px;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    50% { transform: scale(1.2); }
+}
 </style>
 </head>
 
 <body>
 
 <div id="page1" class="page">
+    <div class="rain-container" id="rain"></div>
+
     <h1>💖 Kamu mau jadi pacarku? 💖</h1>
 
     <button class="btn yes" onclick="acceptLove()">😍 Mau</button>
@@ -154,46 +157,39 @@ h1 {
 </div>
 
 <script>
-// cegah scroll iOS
-document.addEventListener("touchmove", function(e) {
-    e.preventDefault();
-}, { passive: false });
-
-const maxX = 390 - 120;
-const maxY = 844 - 60;
+// cegah scroll
+document.addEventListener("touchmove", e => e.preventDefault(), { passive: false });
 
 const noBtn = document.getElementById("noBtn");
+const rain = document.getElementById("rain");
 const page1 = document.getElementById("page1");
 
-// posisi awal sejajar & di bawah tombol mau
+// posisi awal tombol
 window.onload = () => {
     const yesBtn = document.querySelector(".yes");
-    const yesRect = yesBtn.getBoundingClientRect();
+    const rect = yesBtn.getBoundingClientRect();
 
     let posX = (390 / 2) - (noBtn.offsetWidth / 2);
-    let posY = yesRect.bottom + 30;
-
-    if (posY > 844 - 60) posY = 844 - 60;
+    let posY = rect.bottom + 30;
 
     noBtn.style.left = posX + "px";
     noBtn.style.top = posY + "px";
 };
 
-// LOVE RAIN
+// LOVE RAIN (STABIL)
 setInterval(() => {
     let heart = document.createElement("div");
     heart.className = "rain-heart";
     heart.innerHTML = "💖";
 
     heart.style.left = Math.random() * 390 + "px";
-    heart.style.animationDuration = (3 + Math.random() * 2) + "s";
 
-    page1.appendChild(heart);
+    rain.appendChild(heart);
 
-    setTimeout(() => heart.remove(), 5000);
-}, 300);
+    setTimeout(() => heart.remove(), 4000);
+}, 250);
 
-// tombol kabur + geleng
+// tombol kabur
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
@@ -201,14 +197,14 @@ function moveButton() {
     page1.classList.add("shake");
     setTimeout(() => page1.classList.remove("shake"), 400);
 
-    let randomX = Math.random() * maxX;
-    let randomY = Math.random() * maxY;
+    let x = Math.random() * (390 - 120);
+    let y = Math.random() * (844 - 60);
 
-    noBtn.style.left = randomX + "px";
-    noBtn.style.top = randomY + "px";
+    noBtn.style.left = x + "px";
+    noBtn.style.top = y + "px";
 }
 
-// heart trail
+// HEART TRAIL
 document.addEventListener("touchmove", createHeart);
 document.addEventListener("mousemove", createHeart);
 
@@ -221,16 +217,15 @@ function createHeart(e) {
     heart.style.top = (e.touches ? e.touches[0].clientY : e.clientY) + "px";
 
     document.body.appendChild(heart);
-
     setTimeout(() => heart.remove(), 1000);
 }
 
-// MAU → 1000 LOVE NAIK
+// MAU → LOVE BANJIR
 function acceptLove() {
-    const total = 1000;
+    let total = 800; // dikurangi biar smooth
     let count = 0;
 
-    const interval = setInterval(() => {
+    let interval = setInterval(() => {
         for (let i = 0; i < 20; i++) {
             if (count >= total) break;
 
@@ -239,19 +234,18 @@ function acceptLove() {
             love.style.pointerEvents = "none";
 
             love.style.position = "absolute";
-            love.style.fontSize = (20 + Math.random() * 15) + "px";
             love.style.left = Math.random() * 390 + "px";
             love.style.top = "844px";
-            love.style.transition = "transform 1.5s linear, opacity 1.5s";
+            love.style.transition = "1.5s";
 
             document.body.appendChild(love);
 
             setTimeout(() => {
-                love.style.transform = `translateY(-${900 + Math.random()*300}px)`;
+                love.style.transform = "translateY(-900px)";
                 love.style.opacity = 0;
             }, 10);
 
-            setTimeout(() => love.remove(), 1600);
+            setTimeout(() => love.remove(), 1500);
 
             count++;
         }
@@ -259,12 +253,10 @@ function acceptLove() {
         if (count >= total) clearInterval(interval);
     }, 40);
 
-    const page2 = document.getElementById("page2");
-
     page1.classList.add("hidden");
 
     setTimeout(() => {
-        page2.classList.remove("hidden");
+        document.getElementById("page2").classList.remove("hidden");
     }, 1500);
 }
 </script>
