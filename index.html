@@ -74,6 +74,7 @@ h1 {
     position: absolute;
     font-size: 20px;
     animation: float 1s ease-out forwards;
+    pointer-events: none;
 }
 
 @keyframes float {
@@ -107,6 +108,7 @@ h1 {
     top: -20px;
     font-size: 20px;
     animation: rain 4s linear infinite;
+    pointer-events: none;
 }
 
 @keyframes rain {
@@ -116,7 +118,7 @@ h1 {
     }
 }
 
-/* SHAKE 1x */
+/* SHAKE */
 .shake {
     animation: shakeAnim 0.4s;
 }
@@ -134,7 +136,8 @@ h1 {
 <body>
 
 <div id="page1" class="page">
-    <h1>Haiii Sayaaangggg 🥰 <br>Kamu mau jadi pacar aku nggak? 🥺👉👈</h1>
+    <h1>Haiii Sayaaanggg 🥰<br>Kamu mau nggak jadi pacar aku?🥺👉👈 </h1>
+
 
     <button class="btn yes" onclick="acceptLove()">😍 Mau</button>
     <button class="btn no" id="noBtn">😢 Tidak Mau</button>
@@ -142,7 +145,7 @@ h1 {
 
 <div id="page2" class="page hidden success">
     <div class="big-heart">💖</div>
-    <h1>ASIIIQQQQQQ I LOVE U SAYAANGGGG🥰💖<br>AKU JADI MAU CIUUMMM IIIHHHH 😖😖😖</h1>
+    <h1>ASIIIQQQQQQ I LOVE U SAYAAANGGG🥰💖<br>AKU JADI MAUU CIUUUMMM IIHHHH😖😖😖</h1>
 </div>
 
 <script>
@@ -152,9 +155,21 @@ const maxY = 844 - 60;
 const noBtn = document.getElementById("noBtn");
 const page1 = document.getElementById("page1");
 
-// posisi awal
-noBtn.style.left = "200px";
-noBtn.style.top = "500px";
+// POSISI AWAL DI BAWAH TOMBOL MAU
+window.onload = () => {
+    const yesBtn = document.querySelector(".yes");
+    const yesRect = yesBtn.getBoundingClientRect();
+
+    let posX = yesRect.left + (yesRect.width / 2) - 60;
+    let posY = yesRect.bottom + 30;
+
+    if (posX < 0) posX = 10;
+    if (posX > 390 - 120) posX = 390 - 120;
+    if (posY > 844 - 60) posY = 844 - 60;
+
+    noBtn.style.left = posX + "px";
+    noBtn.style.top = posY + "px";
+};
 
 // LOVE RAIN
 setInterval(() => {
@@ -170,16 +185,13 @@ setInterval(() => {
     setTimeout(() => heart.remove(), 5000);
 }, 300);
 
-// TOMBOL KABUR + GELENG 1x
+// TOMBOL KABUR + GELENG
 noBtn.addEventListener("touchstart", moveButton);
 noBtn.addEventListener("mouseover", moveButton);
 
 function moveButton() {
     page1.classList.add("shake");
-
-    setTimeout(() => {
-        page1.classList.remove("shake");
-    }, 400);
+    setTimeout(() => page1.classList.remove("shake"), 400);
 
     let randomX = Math.random() * maxX;
     let randomY = Math.random() * maxY;
@@ -205,7 +217,7 @@ function createHeart(e) {
     setTimeout(() => heart.remove(), 1000);
 }
 
-// MAU → 1000 LOVE NAIK + TRANSISI LAMA
+// MAU → 1000 LOVE
 function acceptLove() {
     const total = 1000;
     let count = 0;
@@ -216,6 +228,7 @@ function acceptLove() {
 
             let love = document.createElement("div");
             love.innerHTML = "😍";
+            love.style.pointerEvents = "none";
 
             love.style.position = "absolute";
             love.style.fontSize = (20 + Math.random() * 15) + "px";
@@ -235,9 +248,7 @@ function acceptLove() {
             count++;
         }
 
-        if (count >= total) {
-            clearInterval(interval);
-        }
+        if (count >= total) clearInterval(interval);
     }, 40);
 
     const page2 = document.getElementById("page2");
@@ -246,7 +257,7 @@ function acceptLove() {
 
     setTimeout(() => {
         page2.classList.remove("hidden");
-    }, 1500); // lebih lama biar dramatis
+    }, 1500);
 }
 </script>
 
